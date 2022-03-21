@@ -1,0 +1,15 @@
+name: pyhomogenize-tests
+channels:
+	- conda-forge
+	- nodefaults
+dependencies:
+	- dask
+	- xarray
+	- numpy
+	- setuptools
+	- pooch
+	- netCDF4
+	# for testing
+	- pytest
+	- pytest-cov
+	- pytest-env
