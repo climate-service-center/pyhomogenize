@@ -225,11 +225,16 @@ class netcdf_basics(basics):
     
     def open(self):
         
-        
-        #ds = xr.open_mfdataset(self.files, use_cftime=True, data_vars='minimal', coords='minimal', compat='override', concat_dim='time')
-        ds = self._open_xrdataset(self.files)
-        return ds
-        #return ds.sortby('time')
+        if isinstance(self.files, xr.Dataset):
+            return self.files
+        elif isinstance(self.files, str):
+            return self._open_xrdataset(self.files)
+        elif isinstance(self.files, list):
+            if all(isinstance(x, (xr.Dataset)) for x in self.files):
+                return xr.concat(self.files, dim='time')
+            elif all(isinstance(x, (str)) for x in self.files):
+                return self._open_xrdataset(self.files)
+        raise ValueError('Input files are not xarray Datasets or files on disk. You can not mix those two types.')
 
     def write(self, input=None, output=None):
         input = self._is_dataset(input)
