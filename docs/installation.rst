@@ -12,7 +12,7 @@ To install pyhomogenize, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install https://gitlab.hzdr.de/gerics/infrastructure/pyhomogenize
+    $ pip install https://github.com/ludwiglierhammer/pyhomogenize
 
 This is the preferred method to install pyhomogenize, as it will always install the most recent stable release.
 
@@ -32,7 +32,7 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git clone https://gitlab.hzdr.de/gerics/infrastructure/pyhomogenize.git
+    $ git clone git clone https://github.com/ludwiglierhammer/pyhomogenize.git
 
 Once you have a copy of the source, you can install it with:
 
@@ -41,5 +41,5 @@ Once you have a copy of the source, you can install it with:
     $ pip install -e .
 
 
-.. _Gitlab repo: https://gitlab.hzdr.de/gerics/infrastructure/pyhomogenize
+.. _Gitlab repo: https://github.com/ludwiglierhammer/pyhomogenize
 
