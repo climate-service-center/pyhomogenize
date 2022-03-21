@@ -9,10 +9,17 @@ with open('README.rst') as readme_file:
 
 with open('HISTORY.rst') as history_file:
     history = history_file.read()
+    
+with open('pyhomogenize/__init__.py') as init_file:
+    lines = init_file.read().strip().replace(" ","").split('\n')
+    for line in lines:
+        if '__version__' in line:
+            __version__ = line.split('=')[-1]
+            break
+        
+requirements = open("ci/requirements/requirements.txt").read().strip().split("\n")
 
-requirements = [ ]
-
-setup_requirements = [ ]
+setup_requirements = open("ci/requirements/requirements_dev.txt").read().strip().split("\n")
 
 test_requirements = [ ]
 
@@ -31,7 +38,7 @@ setup(
         'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
     ],
-    description="Tool to comntrol time settings of netCDF files using cdo and neCDF4",
+    description="Tool to homogenize netCDF files to CF standard",
     entry_points={
         'console_scripts': [
             'pyhomogenize=pyhomogenize.cli:main',
@@ -47,7 +54,7 @@ setup(
     setup_requires=setup_requirements,
     test_suite='tests',
     tests_require=test_requirements,
-    url='https://gitlab.hzdr.de/gerics/infrastructure/pyhomogenize',
-    version='0.1.0',
+    url='https://github.com/ludwiglierhammer/pyhomogenize',
+    version=__version__,
     zip_safe=False,
 )
