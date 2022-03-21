@@ -68,9 +68,7 @@ Requirements
 
 * dask
 
-* pandas
-
-* intake-esm
+* iteration_utilities
 
 * xarray 
 
