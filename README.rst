@@ -2,12 +2,20 @@
 Homogenize NetCDF files to CF standard: pyhomogenize
 ====================================================
 
+.. image:: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml/badge.svg
+    :target: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml
+    
+.. image:: https://codecov.io/gh/ludwiglierhammer/pyhomogenize/branch/master/graph/badge.svg
+    :target: https://codecov.io/gh/ludwiglierhammer/pyhomogenize
+    
+.. image:: https://readthedocs.org/projects/pyhomogenize/badge/?version=latest
+    :target: https://pyhomogenize.readthedocs.io/en/latest/?version=latest
+    :alt: Documentation Status  
+        
+.. image:: https://pyup.io/repos/github/ludwiglierhammer/pyhomogenize/shield.svg
+    :target: https://pyup.io/repos/github/ludwiglierhammer/pyhomogenize/
+    :alt: Updates   
 
-.. image:: https://img.shields.io/pypi/v/pyhomogenize.svg
-        :target: https://gitlab.hzdr.de/gerics/infrastructure/pyhomogenize/
-
-.. image:: https://img.shields.io/travis/ludwiglierhammer/pyhomogenize.svg
-        :target: https://travis-ci.com/ludwiglierhammer/pyhomogenize
 
 
 Tool to homogenize netCDF to CF standard files using xarray
@@ -15,7 +23,7 @@ Tool to homogenize netCDF to CF standard files using xarray
 See https://cfconventions.org
 
 * Free software: MIT license
-
+* Documentation: https://pyhomogenize.readthedocs.io
 
 Features
 --------
@@ -32,6 +40,45 @@ At the moment mainly four python classes are defined.
 
 * time_match: This class compares to xr.datasets and returns the maximum temporal intersection
   Firstly you have to open the datasets with netcdf_basics or time_control
+  
+Instalation
+-----------
+You can install the package directly from github using pip:
+
+.. code-block:: console
+
+     pip install git+https://github.com/ludwiglierhammer/pyhomogenize
+
+If you want to contribute, I recommend cloning the repository and installing the package in development mode, e.g.
+
+.. code-block:: console
+
+    git clone https://github.com/ludwiglierhammer/pyhomogenize.git
+    cd pyhomogenize
+    pip install -e .
+    
+This will install the package but you can still edit it and you don't need the package in your :code:`PYTHONPATH`
+
+Requirements
+------------
+
+* python3.6 or higher
+
+* cftime
+
+* dask
+
+* pandas
+
+* intake-esm
+
+* xarray 
+
+Contact
+-------
+In cases of any problems, needs or wishes do not hesitate to contact:
+
+ludwig.lierhammer@hereon.de
 
 Credits
 -------
