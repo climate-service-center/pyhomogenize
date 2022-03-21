@@ -4,21 +4,21 @@ import logging
 import os
 import sys
 
-from . import utilities
-from . import operators
+from . import _utilities as ut
+from . import operators as op
 
 def pyhomogenize(args):
     #show all available operators
     if args.operators:
-        print(operators.operators)
+        print(op.operators)
         return
-    #split operator and arguments
-    opargs         = args.operator[0].split(',')
-    args.operator  = opargs[0]
-    args.arguments = opargs[1:]
+    operator  = args.operator[0]
+    arguments = args.operator[1:]
+    args.operator  = operator
+    args.arguments = arguments
     #check if selected operator is available
-    func = utilities.get_operator(operators, args.operator, type='operator')
+    func = ut.get_operator(op, args.operator, type='operator')
     #check if all input files are available
-    utilities.check_existance(args.input_files)
+    ut.check_existance(args.input_files)
     #start operator
     func.start(args)

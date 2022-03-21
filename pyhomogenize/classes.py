@@ -7,7 +7,7 @@ import pandas as pd
 import numpy as np
 from iteration_utilities import duplicates
 
-from . import consts
+from . import _consts as consts
 
 class basics():
 
@@ -172,18 +172,64 @@ class netcdf_basics(basics):
             indexes = str(indexes)
         if indexes:
             self._add_to_attrs(self.ds, attr_name, indexes)
-
+    
     def _get_var_name(self):
-        name = []
-        coords = self.ds.coords
-        for n in self.ds.data_vars:
-            if getattr(self.ds, n).attrs and getattr(self.ds, n).coords: name += [n]
-        return name
+        """List of CF variables in xr.Dataset
 
-    def open(self):      
+        Parameters
+        ----------
+        ds: xr.Dataset
+            xarray Dataset
+        Returns
+        -------
+        list
+            List of CF variables
+        """
+    
+        def condition(ds, var):
+            return len(ds[var].coords) == len(ds.coords)
+    
+        def most_coords(ds):
+            coords=0
+            name=[]
+            for var in ds.data_vars:
+                ncoords=len(ds[var].coords)
+                if ncoords > coords:
+                    coords=ncoords
+                    name+=[var]
+            return name
 
-        ds = xr.open_mfdataset(self.files, use_cftime=True, data_vars='minimal', coords='minimal', compat='override', concat_dim='time')
-        return ds.sortby('time')
+        try:
+            var_list = [var for var in self.ds.data_vars if condition(self.ds, var)]
+            if var_list: return var_list
+            return most_coords(ds)
+        except:
+            return [self.ds.name]
+    
+    def _open_xrdataset(self, files, use_cftime=True, parallel=True, data_vars='minimal', chunks={'time':1}, 
+                        coords='minimal', compat='override', drop=None, **kwargs):
+        """optimized function for opening large cf datasets.
+            based on https://github.com/pydata/xarray/issues/1385#issuecomment-561920115
+            decode_timedelta=False is added to leave variables and coordinates with time units in 
+            {“days”, “hours”, “minutes”, “seconds”, “milliseconds”, “microseconds”} encoded as numbers.
+    
+            """
+        def drop_all_coords(ds):
+            return ds.reset_coords(drop=True)
+
+        ds = xr.open_mfdataset(files, parallel=parallel, decode_times=False, combine='by_coords', 
+                               preprocess=drop_all_coords, decode_cf=False, chunks=chunks,
+                               data_vars=data_vars, coords=coords, compat=compat, **kwargs)
+
+        return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
+    
+    def open(self):
+        
+        
+        #ds = xr.open_mfdataset(self.files, use_cftime=True, data_vars='minimal', coords='minimal', compat='override', concat_dim='time')
+        ds = self._open_xrdataset(self.files)
+        return ds
+        #return ds.sortby('time')
 
     def write(self, input=None, output=None):
         input = self._is_dataset(input)

@@ -1,7 +1,7 @@
 
 import logging
 import sys
-from .. import classes 
+from pyhomogenize import time_control
 
 help="""
 showmiss : Print missing timestamps. At first, merge files if needed.
@@ -9,6 +9,6 @@ showmiss : Print missing timestamps. At first, merge files if needed.
 """
 
 def start(args):
-    file = classes.time_control(args.input_files)
-    print(file.get_missings())
+    file = time_control(args.input_files)
+    print('Missing time steps: ', file.get_missings())
     

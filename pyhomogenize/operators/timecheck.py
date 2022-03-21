@@ -1,7 +1,6 @@
 
 import logging
-from .. import classes 
-import inspect
+from pyhomogenize import time_control
 
 help="""
 timecheck : By default, delete duplicated and redundant time stamps from input files and write duplicated, redundant and missing timestamps to netcdf variable attributes. THe selection is changeable.
@@ -9,12 +8,12 @@ timecheck : By default, delete duplicated and redundant time stamps from input f
 """
 
 def start(args):
-    file = classes.time_control(args.input_files)
+    file = time_control(args.input_files)
     if args.arguments:
         file.check_timestamps(selection=args.arguments, output=args.output_file)
     else:
         file.check_timestamps(output=args.output_file)
     if not args.output_file: 
-        print(file.duplicated_timesteps)
-        print(file.redundant_timesteps)
-        print(file.missing_timesteps)
+        print('Duplicated time steps: ', file.duplicated_timesteps)
+        print('Redundant time steps: ', file.redundant_timesteps)
+        print('Missing time steps: ', file.missing_timesteps)

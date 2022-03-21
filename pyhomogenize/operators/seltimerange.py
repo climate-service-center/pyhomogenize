@@ -1,7 +1,7 @@
 
 import logging
 import sys
-from .. import classes 
+from pyhomogenize import time_control 
 
 help="""
 seltimerange : Select user-given time range. At first, merge files if needed.
@@ -10,6 +10,6 @@ seltimerange : Select user-given time range. At first, merge files if needed.
 """
 
 def start(args):
-    file = classes.time_control(args.input_files)
+    file = time_control(args.input_files)
     file.select_range(args.arguments, output=args.output_file)
     

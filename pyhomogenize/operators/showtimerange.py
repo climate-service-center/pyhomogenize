@@ -1,6 +1,6 @@
 
 import logging
-from .. import classes 
+from pyhomogenize import time_control
 
 help="""
 showtimerange : Show available timestamps. At first, merge files if needed.
@@ -8,5 +8,5 @@ showtimerange : Show available timestamps. At first, merge files if needed.
 """
 
 def start(args):
-    file = classes.time_control(args.input_files)
+    file = time_control(args.input_files)
     print(file.time)
