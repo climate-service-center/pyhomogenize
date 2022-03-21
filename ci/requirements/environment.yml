@@ -9,7 +9,7 @@ dependencies:
     - setuptools
     - pooch
     - netCDF4
-    - iteration-utilities
+    - iteration_utilities
     # for testing
     - pytest
     - pytest-cov
