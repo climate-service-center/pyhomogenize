@@ -4,10 +4,10 @@ import pytest
 import pyhomogenize as pyh
 
 def _get_keys(dictionary):
-    return getattr(pyh.const, dictionary).keys()
+    return getattr(pyh.consts, dictionary).keys()
 
 def _get_values(dictionary):
-    return getattr(pyh.const, dictionary).values()
+    return getattr(pyh.consts, dictionary).values()
 
 def test_frequencies():
     assert _get_keys('frequencies')
