@@ -88,67 +88,91 @@ class basics():
                 return date
             date -= td(hours=1)
 
-    def _mid_timestep(self, freq, st, end):
+    def _mid_timestep(self, freq, st, end, calendar):
         f    = self._get_key_to_value(consts.frequencies, freq)
-        attr = consts.translator[f] 
-        st  = self._begin_of(st, attr)
-        end = self._end_of(end, attr) 
-        t1  = xr.cftime_range(st, end, freq=freq[0])
-        t2  = xr.cftime_range(st, end, freq=freq[1])
+        attr = consts.translator[f]
+        st  = self._date_to_str(self._begin_of(st, attr))
+        end = self._date_to_str(self._end_of(end, attr))
+        t1  = xr.cftime_range(st, end, freq=freq[0], calendar=calendar)
+        t2 = xr.cftime_range(st, periods=len(t1), freq=freq[1], calendar=calendar)
+        return t1 + (t2 - t1 + td(days=1)) / 2
         return t1 + (t2 - t1 + td(days=1)) / 2
 
-    def _point_timestep(self, freq, st, end):
-        return xr.cftime_range(st, end, freq=freq)
+    def _point_timestep(self, freq, st, end, calendar):
+        if not isinstance(st, str): st = self._date_to_str(st)
+        if not isinstance(end, str): end = self._date_to_str(end)
+        return xr.cftime_range(st, end, freq=freq, calendar=calendar)
 
-    def _date_range(self, start, end, frequency):
+    def _date_range(self, start, end, frequency, calendar='standard'):
         function = xr.cftime_range
         if isinstance(frequency, str):
-            return self._point_timestep(frequency, start, end)
+            if frequency in consts.frequencies.keys():
+                frequency = consts.frequencies[frequency]
+        if isinstance(frequency, str):
+            return self._point_timestep(frequency, start, end, calendar=calendar)
         if isinstance(frequency, list):
-            return self._mid_timestep(frequency, start, end)
+            return self._mid_timestep(frequency, start, end, calendar=calendar)
 
-    def _is_month_start(self, cftime_range):
-        array = []
-        for cftime in cftime_range:
-            prev = cftime - td(days=1)
-            if prev.month != cftime.month:
-                array += [True]
-                continue
-            array += [False]
-        return array
+    #def _is_month_start(self, cftime_range):
+    #    array = []
+    #    for cftime in cftime_range:
+    #        prev = cftime - td(days=1)
+    #        if prev.month != cftime.month:
+    #            array += [True]
+    #            continue
+    #        array += [False]
+    #    return array
 
-    def _is_month_end(self, cftime_range):
-        array = []
-        for cftime in cftime_range:
-            next = cftime + td(days=1)
-            if next.month != cftime.month:
-                array += [True]
-                continue
-            array += [False]
-        return array 
+    #def _is_month_end(self, cftime_range):
+    #    array = []
+    #    for cftime in cftime_range:
+    #        next = cftime + td(days=1)
+    #        if next.month != cftime.month:
+    #            array += [True]
+    #            continue
+    #        array += [False]
+    #    return array
 
-    def _adjust_time(self, start, end, frequency, smonth=[1], emonth=[12]): 
+    #def _adjust_time(self, start, end, frequency, smonth=[1], emonth=[12]):
+    #
+    #    date_range = self._date_range(start, end, frequency)
+    #    for start in date_range[self._is_month_start(date_range)]:
+    #        if start.month in smonth:
+    #            break
+    #        start = None
+    #    for end in reversed(date_range[self._is_month_end(date_range)]):
+    #        if end.month in emonth:
+    #            #end = self._end_of(end, 'day')
+    #            break
+    #        end = None
+    #
+    #    return start, end
 
+    def date_range_to_frequency_limits(self, start, end, frequency,
+                                       smonth=[1,2,3,4,5,6,7,8,9,10,11,12],
+                                       emonth=[12,11,10,9,8,7,6,5,4,3,2,1]):
+        if isinstance(start, str): start = self._str_to_date(start)
+        if isinstance(end, str): end   = self._str_to_date(end, mode='end')
         date_range = self._date_range(start, end, frequency)
-        for start in date_range[self._is_month_start(date_range)]:
-            if start.month in smonth:
-                break
-            start = None
-        for end in reversed(date_range[self._is_month_end(date_range)]):
-            if end.month in emonth:
-                end = self._end_of(end, 'day')
-                break
-            end = None
-
-        return start, end
+        for sdate in date_range:
+            if sdate < start: continue
+            if sdate.month in smonth: break
+            sdate = None
+        if not sdate: return None, None
+        for edate in reversed(date_range):
+            if edate > end: continue
+            if edate.month in emonth: break
+            edate=None
+        if not edate: return None, None
+        return sdate, edate
 
 class netcdf_basics(basics):
 
     def __init__(self, files):
         if isinstance(files, str): files = [files]
-        self.files = files 
+        self.files = files
         self.ds    = self.open()
-        self.name = self._get_var_name() 
+        self.name = self._get_var_name()
 
     def _is_dataset(self, input):
         if not isinstance(input, xr.Dataset): input = self.ds
@@ -157,7 +181,7 @@ class netcdf_basics(basics):
     def _add_to_attrs(self, target, attr_name, value):
         if attr_name in target.attrs:
             value = target.attrs[attr_name] + ', ' + value
-        target.attrs[attr_name] = value 
+        target.attrs[attr_name] = value
 
     def _to_variable_attributes(self, indexes, attr_name):
         var_name = self.name
@@ -166,13 +190,13 @@ class netcdf_basics(basics):
         if indexes:
             for var in var_name:
                 self._add_to_attrs(getattr(self.ds, var), attr_name, indexes)
-        
+
     def _to_global_attributes(self, indexes, attr_name):
         if isinstance(indexes, list):
             indexes = str(indexes)
         if indexes:
             self._add_to_attrs(self.ds, attr_name, indexes)
-    
+
     def _get_var_name(self):
         """List of CF variables in xr.Dataset
 
@@ -185,10 +209,10 @@ class netcdf_basics(basics):
         list
             List of CF variables
         """
-    
+
         def condition(ds, var):
             return len(ds[var].coords) == len(ds.coords)
-    
+
         def most_coords(ds):
             coords=0
             name=[]
@@ -205,26 +229,26 @@ class netcdf_basics(basics):
             return most_coords(ds)
         except:
             return [self.ds.name]
-    
-    def _open_xrdataset(self, files, use_cftime=True, parallel=True, data_vars='minimal', chunks={'time':1}, 
+
+    def _open_xrdataset(self, files, use_cftime=True, parallel=True, data_vars='minimal', chunks={'time':1},
                         coords='minimal', compat='override', drop=None, **kwargs):
         """optimized function for opening large cf datasets.
             based on https://github.com/pydata/xarray/issues/1385#issuecomment-561920115
-            decode_timedelta=False is added to leave variables and coordinates with time units in 
+            decode_timedelta=False is added to leave variables and coordinates with time units in
             {“days”, “hours”, “minutes”, “seconds”, “milliseconds”, “microseconds”} encoded as numbers.
-    
+
             """
         def drop_all_coords(ds):
             return ds.reset_coords(drop=True)
 
-        ds = xr.open_mfdataset(files, parallel=parallel, decode_times=False, combine='by_coords', 
+        ds = xr.open_mfdataset(files, parallel=parallel, decode_times=False, combine='by_coords',
                                preprocess=drop_all_coords, decode_cf=False, chunks=chunks,
                                data_vars=data_vars, coords=coords, compat=compat, **kwargs)
 
         return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
-    
+
     def open(self):
-        
+
         if isinstance(self.files, xr.Dataset):
             return self.files
         elif isinstance(self.files, str):
@@ -270,12 +294,12 @@ class time_control(netcdf_basics):
 
     def _missings(self):
         time       = self._equalize_time(self.time, ignore=self.equalize)
-        date_range = self._equalize_time(self._date_range(time[0], time[-1], self.frequency), ignore=self.equalize)
+        date_range = self._equalize_time(self._date_range(time[0], time[-1], self.frequency, calendar=self.time.calendar), ignore=self.equalize)
         return sorted(list(set(date_range).difference(time)))
 
     def _redundants(self):
         time       = self._equalize_time(self.time, ignore=self.equalize)
-        date_range = self._equalize_time(self._date_range(time[0], time[-1], self.frequency), ignore=self.equalize) 
+        date_range = self._equalize_time(self._date_range(time[0], time[-1], self.frequency, calendar=self.time.calendar), ignore=self.equalize)
         return sorted(list(set(time).difference(date_range)))
 
     def _write_timesteps(self, timesteps, naming):
@@ -291,7 +315,7 @@ class time_control(netcdf_basics):
 
     def get_redundants(self):
         return self._convert_to_string(self._redundants())
-    
+
     def check_timestamps(self, selection=['duplicates','redundants','missings'], output=None, correct = False):
         if isinstance(selection, str): selection = [selection]
         deletes = []
@@ -312,7 +336,7 @@ class time_control(netcdf_basics):
 
     def select_range(self, time_range, output=None):
         start_date=time_range[0]
-        if not isinstance(start_date, str): 
+        if not isinstance(start_date, str):
             start_date = self._date_to_str(start_date)
         end_date=time_range[1]
         if not isinstance(end_date, str):
@@ -347,7 +371,7 @@ class time_control(netcdf_basics):
             if getattr(avail_end, unit_of_time) == getattr(req_end, unit_of_time):
                 continue
             break
-            
+
         return True
 
 
@@ -367,7 +391,7 @@ class time_compare(basics):
             if time[-1] < end: end = time[-1]
         return start, end
 
-                
+
 
 
 
