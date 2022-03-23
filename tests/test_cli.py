@@ -3,7 +3,10 @@ import pytest
 
 import pyhomogenize as pyh
 
-from . import has_, requires_
+from . import has_dask, requires_dask
+from . import has_xarray, requires_xarray
+from . import has_numpy, requires_numpy
+from . import has_iteration_utilities, requires_iteration_utilities
 
 def test_cli_ops():
     parser = pyh.create_parser()
