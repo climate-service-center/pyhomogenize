@@ -4,7 +4,7 @@ import pytest
 import pyhomogenize as pyh
 
 def test_check_existance():
-    pyh.utilities.check_existance(test_netcdf)
+    pyh.utilities.check_existance(pyh.test_netcdf)
     pyh.utilities.check_existance(['test_netcdf'])
 
 def test_get_operator_merge():
