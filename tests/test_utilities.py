@@ -13,7 +13,7 @@ def test_get_operator_none():
     pyh.utilities.get_operator(pyh.op, '', type='operator')
 
 def test_get_operator_false():
-    assert pyh.utilities.get_operator(pyh.op, 'test', type='operator')
+    pyh.utilities.get_operator(pyh.op, 'test', type='operator')
 
 def test_get_operator_merge():
     assert pyh.utilities.get_operator(pyh.op, 'merge', type='operator')
