@@ -48,7 +48,12 @@ def test_cli_showvar():
     args = parser.parse_args(['showvar','-i',pyh.test_netcdf[0]])
     pyh.pyhomogenize(args)
 
-def test_cli_timecheck():
+def test_cli_timecheck_all():
+    parser = pyh.create_parser()
+    args = parser.parse_args(['timecheck','-i',pyh.test_netcdf[0]])
+    assert pyh.pyhomogenize(args)
+
+def test_cli_timecheck_sel():
     parser = pyh.create_parser()
     args = parser.parse_args(['timecheck,duplicates','-i',pyh.test_netcdf[0]])
     assert pyh.pyhomogenize(args)
