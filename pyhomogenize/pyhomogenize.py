@@ -18,7 +18,8 @@ def pyhomogenize(args):
     args.arguments = arguments
     #check if selected operator is available
     func = ut.get_operator(op, args.operator, type='operator')
+    if not func: return
     #check if all input files are available
-    ut.check_existance(args.input_files)
+    if not ut.check_existance(args.input_files): return
     #start operator
-    func.start(args)
+    return func.start(args)

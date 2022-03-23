@@ -1,7 +1,5 @@
 
-import logging
-import sys
-from pyhomogenize import time_control 
+import pyhomogenize as pyh
 
 help="""
 seltimerange : Select user-given time range. At first, merge files if needed.
@@ -10,6 +8,8 @@ seltimerange : Select user-given time range. At first, merge files if needed.
 """
 
 def start(args):
-    file = time_control(args.input_files)
+    file = pyh.time_control(args.input_files)
+    if not args.output_file:
+        print('No output file selecetd. Use -o <ofile>.')
     file.select_range(args.arguments, output=args.output_file)
-    
+    return file.ds

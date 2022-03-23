@@ -1,7 +1,5 @@
 
-import logging
-import sys
-from pyhomogenize import netcdf_basics
+import pyhomogenize as pyh
 
 help="""
 showvar : Print variable names. At first, merge files if needed.
@@ -9,6 +7,8 @@ showvar : Print variable names. At first, merge files if needed.
 """
 
 def start(args):
-    file = netcdf_basics(args.input_files)
-    print(file.name)
+    file = pyh.netcdf_basics(args.input_files)
+    name = file.name
+    print(name)
+    return name
     

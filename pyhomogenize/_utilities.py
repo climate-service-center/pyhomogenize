@@ -3,10 +3,6 @@ import os
 import sys
 import logging
 
-def exit(cmd):
-    logging.error(cmd)
-    sys.exit()
-
 def check_existance(files):
     """
     Check if requested files are available     
@@ -15,18 +11,23 @@ def check_existance(files):
     stop = False
     commands = ''
     if not files: 
-        exit('No input files selected.')
+        print('No input files selected.')
+        return
     for file in files:
         if not os.path.isfile(file):
             stop = True
             commands += '{} is not available\n'.format(file)
     if stop:
-        exit(commands)
+        print(commands)
+        return
+    return True
 
 def get_operator(object, name, type='attribute'):
     if not name:
-        exit('No {} is selected.'.format(type))
+        print('No {} is selected.'.format(type))
+        return
     try:
         return getattr(object, name)
     except:
-        exit('Choosen {} {} is not available.'.format(type, name)) 
+        print('Choosen {} {} is not available.'.format(type, name)) 
+        return

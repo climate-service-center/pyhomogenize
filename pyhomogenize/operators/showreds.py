@@ -1,7 +1,5 @@
 
-import logging
-import sys
-from pyhomogenize import time_control
+import pyhomogenize as pyh
 
 help="""
 showreds : Print redundant timestamps. At first, merge files if needed.
@@ -9,6 +7,7 @@ showreds : Print redundant timestamps. At first, merge files if needed.
 """
 
 def start(args):
-    file = time_control(args.input_files)
-    print('Redundant time steps: ', file.get_redundants())
-    
+    file = pyh.time_control(args.input_files)
+    redundants =  file.get_redundants()
+    print('Redundant time steps: ', redundants)
+    return redundants

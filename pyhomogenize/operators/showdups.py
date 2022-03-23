@@ -1,7 +1,5 @@
 
-import logging
-import sys
-from pyhomogenize import time_control
+import pyhomogenize as pyh
 
 help="""
 showdups : Print duplicated timestamps. At first, merge files if needed.
@@ -9,6 +7,7 @@ showdups : Print duplicated timestamps. At first, merge files if needed.
 """
 
 def start(args):
-    file = time_control(args.input_files)
-    print('Duplicated time steps: ',file.get_duplicates())
-    
+    file = pyh.time_control(args.input_files)
+    duplicates = file.get_duplicates()
+    print('Duplicated time steps: ',duplicates)
+    return duplicates
