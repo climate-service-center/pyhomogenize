@@ -5,7 +5,7 @@ import xarray as xr
 
 import pyhomogenize as pyh
 
-#from . import has_xarray, requires_xarray
+from . import has_xarray, requires_xarray
 
 def test_date_range_to_frequency_limits():
     basics = pyh.basics()
