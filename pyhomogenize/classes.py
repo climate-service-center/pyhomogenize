@@ -338,8 +338,8 @@ class time_control(netcdf_basics):
             self._write_timesteps(add, nmng)
         timesteps = [n for n,t in enumerate(time) if n not in list(dict.fromkeys(deletes))]
         if correct: self.ds = self.ds.isel(time=timesteps)
-        if not output: return self
-        self.write(input=self.ds, output=output)
+        if output: self.write(input=self.ds, output=output)
+        return self
 
     def select_range(self, time_range, output=None):
         start_date=time_range[0]
@@ -350,8 +350,18 @@ class time_control(netcdf_basics):
             end_date = self._date_to_str(end_date)
         self.ds   = self.ds.sel(time=slice(start_date, end_date))
         self.time = self._convert_time(self.ds.time)
-        if not output: return self
-        self.write(input=self.ds, output=output)
+        if output: self.write(input=self.ds, output=output)
+        return self
+
+    def select_limited_time_range(self, output=None, **kwargs):
+        start, end = self.date_range_to_frequency_limits(self, date_range=self.time,
+                                                         frequency=self.frequency, **kwargs)
+        start_date = self._date_to_str(start)
+        end_date = self._date_to_str(end)
+        self.ds   = self.ds.sel(time=slice(start_date, end_date))
+        self.time = self._convert_time(self.ds.time)
+        if output: self.write(input=self.ds, output=output)
+        return self
 
     def within_time_range(self, requested_time_range):
         avail_start = self.time[0]
@@ -389,9 +399,7 @@ class time_compare(basics):
         self.times    = [ds.time for ds in list_of_datasets]
 
     def max_intersection(self):
-        start = None
-        end   = None
-        #print(self.times)
+        start, end = None, None
         for time in self.times:
             if not start: start = time[0]
             if not end: end = time[-1]

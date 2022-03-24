@@ -32,3 +32,7 @@ def test_select_range():
 def test_within_time_range():
     time_control.within_time_range(['2007-06-01', '2008-06-30'])
     time_control.within_time_range(['2006-06-01', '2008-06-30'])
+
+def test_select_limited_time_range():
+    time_control.select_limited_time_range(output='test.nc', smonth=[3,6,9,12], emonth=[2,5,8,11])
+
