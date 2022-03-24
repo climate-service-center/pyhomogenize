@@ -29,6 +29,11 @@ format = {'1hr'     : '%Y-%m-%dT%H:%M',
           'yr'      : '%Y',
           'fx'      : None}
 
+is_month = {'hour'  : True,
+            'day'   : True,
+            'month' : False,
+            'year'  : False}
+
 equalize = {'1hr'     : ['second','microsecond','nanosecond'],
             '3hr'     : ['second','microsecond','nanosecond'],
             '6hr'     : ['second','microsecond','nanosecond'],
