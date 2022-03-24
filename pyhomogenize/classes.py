@@ -273,6 +273,7 @@ class netcdf_basics(basics):
             return
         self._to_variable_attributes(self._convert_to_string(self.files), 'associated_files')
         input.to_netcdf(output)
+        return output
 
 class time_control(netcdf_basics):
 

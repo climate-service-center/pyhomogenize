@@ -1,12 +1,16 @@
 
 import pytest
 
+import xarray as xr
+
 import pyhomogenize as pyh
+
+from . import has_xarray, requires_xarray
 
 def test_date_range_to_frequency_limits():
     basics = pyh.basics()
     start  = '2005-03-02'
-    end    = '2005-12-31'
+    end    = '2005-12-25'
     smonth = [3,6,9,12]
     emonth = [2,5,8,11]
     
@@ -15,6 +19,9 @@ def test_date_range_to_frequency_limits():
                                                  frequency=frequency,
                                                  smonth=smonth,
                                                  emonth=emonth)
+    
+    date_range = xr.cftime_range(start, end)
+    assert basics.date_range_to_frequency_limits(date_range=date_range)
 
     frequency = 'mon'
     assert basics.date_range_to_frequency_limits(start, end,
