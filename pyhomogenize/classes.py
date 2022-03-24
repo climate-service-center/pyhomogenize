@@ -144,7 +144,7 @@ class basics():
         if isinstance(frequency, str):
             if frequency in consts.frequencies.keys():
                 frequency = consts.frequencies[frequency]
-        if not date_range:
+        if date_range is None:
             if not start or not end: return None, None
             if isinstance(start, str): start = self._str_to_date(start)
             if isinstance(end, str): end   = self._str_to_date(end, mode='end')
