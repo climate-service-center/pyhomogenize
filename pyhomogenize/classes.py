@@ -388,14 +388,17 @@ class time_compare(basics):
         basics.__init__(self)
         self.times    = [ds.time for ds in list_of_datasets]
 
-    def _max_intersection(self):
-        start = False
-        end   = False
+    def max_intersection(self):
+        start = None
+        end   = None
+        #print(self.times)
         for time in self.times:
             if not start: start = time[0]
             if not end: end = time[-1]
             if time[0]  > start: start = time[0]
             if time[-1] < end: end = time[-1]
+            if start > end:
+                start, end = None, None
         return start, end
 
 
