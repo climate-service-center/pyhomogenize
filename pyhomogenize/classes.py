@@ -268,12 +268,12 @@ class netcdf_basics(basics):
 
     def write(self, input=None, output=None):
         input = self._is_dataset(input)
+        self._to_variable_attributes(self._convert_to_string(self.files), 'associated_files')
         if not output:
             print('No output selected.')
-            return
-        self._to_variable_attributes(self._convert_to_string(self.files), 'associated_files')
-        input.to_netcdf(output)
-        return output
+        else:
+            input.to_netcdf(output)
+        return self
 
 class time_control(netcdf_basics):
 
