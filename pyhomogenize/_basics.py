@@ -52,7 +52,7 @@ class basics():
         delim: str, default: ','
             Output string delimiter between input list entries
         fmt: str, default: ' %Y-%m-%dT%H:%M:%S'
-            Explicit format string for converting string into ``cftime.datetime`` or ``datetime.datetime`` object
+            Explicit format string for converting string into ``cftime.datetime`` object
             Consider only if list element is ``cftime.datetime`` object
         
         Returns
@@ -370,6 +370,8 @@ class basics():
         frequency: str ot list, default:'mon'
             CF frequency string or list of CF frequency strings or frequency string or list of frequency strings for use with ``cftime`` calendars
             https://xarray.pydata.org/en/stable/generated/xarray.cftime_range.html
+        calendar: str, default: 'standard'
+            Calendar type for the datetimes
         smonth: list, default: [1,2,3,4,5,6,7,8,9,10,11,12]
             One of the allowed values of left bound's ``datetime.datetime`` instance attribute month 
         emonth: list, default: [12,11,10,9,8,7,6,5,4,3,2,1]

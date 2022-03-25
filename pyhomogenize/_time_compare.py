@@ -28,4 +28,4 @@ class time_compare(time_control):
     def select_max_intersection(self, **kwargs):
         max_intersection = self.max_intersection()
         if max_intersection == (None, None): return
-        return [tco.select_range(max_intersection, **kwargs) for tco in self.time_control_objects]
+        return [tco.select_time_range(max_intersection, **kwargs) for tco in self.time_control_objects]

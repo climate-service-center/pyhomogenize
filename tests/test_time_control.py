@@ -3,10 +3,10 @@ import pytest
 
 import pyhomogenize as pyh
 
-from . import has_dask, requires_dask
-from . import has_xarray, requires_xarray
-from . import has_numpy, requires_numpy
-from . import has_iteration_utilities, requires_iteration_utilities
+#from . import has_dask, requires_dask
+#from . import has_xarray, requires_xarray
+#from . import has_numpy, requires_numpy
+#from . import has_iteration_utilities, requires_iteration_utilities
 
 netcdffile   = [pyh.test_netcdf[1], pyh.test_netcdf[3]]
 time_control = pyh.time_control(netcdffile)
@@ -25,8 +25,8 @@ def test_check_timestamps():
     assert time_control.check_timestamps(selection='duplicates')
     assert time_control.check_timestamps(selection=['duplicates','missings'])
     
-def test_select_range():
-    assert time_control.select_range(['2007-06-01','2008-06-30'],
+def test_select_time_range():
+    assert time_control.select_time_range(['2007-06-01','2008-06-30'],
                                      output='test.nc')
 
 def test_within_time_range():
@@ -37,3 +37,4 @@ def test_within_time_range():
 def test_select_limited_time_range():
     time_control.select_limited_time_range(output='test.nc', smonth=[3,6,9,12], emonth=[2,5,8,11])
 
+test_within_time_range()
