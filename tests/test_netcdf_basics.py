@@ -10,7 +10,7 @@ from . import has_iteration_utilities, requires_iteration_utilities
 
 
 def test_netcdf_basics():
-    netcdffile=pyh.test_netcdf
+    netcdffile=pyh.test_netcdf[0]
     netcdfbasics = pyh.netcdf_basics(netcdffile)
     assert netcdfbasics.files
     assert netcdfbasics.ds
