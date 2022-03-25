@@ -15,6 +15,13 @@ class basics():
     def __init__(self, fmt=None):
         if not fmt: fmt = '%Y-%m-%dT%H:%M:%S'
         self.fmt = fmt
+        
+    def _flatten_list(self, lst):
+        rt = []
+        for i in lst:
+            if isinstance(i,list): rt.extend(self._flatten_list(i))
+            else: rt.append(i)
+        return rt
 
     def _convert_to_string(self, values, delim=',',fmt=None):
         converted = ''
@@ -393,11 +400,19 @@ class time_control(netcdf_basics):
         return True
 
 
-class time_compare(basics):
+class time_compare(time_control):
+    
+    def __init__(self, *compare_objects, **kwargs):
+        basics.__init__(self, **kwargs)
+        self.compare_objects = self._flatten_list(compare_objects)
+        self.time_control_objects = [self._to_time_control_object(cpo) for cpo in self.compare_objects]
+        self.times = [tco.time for tco in self.time_control_objects]
 
-    def __init__(self, list_of_datasets):
-        basics.__init__(self)
-        self.times    = [ds.time for ds in list_of_datasets]
+    def _to_time_control_object(self, identity):
+        if isinstance(identity, time_control):
+            return identity
+        else:
+            return time_control(identity)
 
     def max_intersection(self):
         start, end = None, None
@@ -410,7 +425,10 @@ class time_compare(basics):
                 start, end = None, None
         return start, end
 
-
+    def select_max_intersection(self):
+        max_intersection = self.max_intersection()
+        if max_intersection == (None, None): return
+        return [tco.select_range(max_intersection) for tco in self.time_control_objects]
 
 
 
