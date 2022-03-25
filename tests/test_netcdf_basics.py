@@ -8,9 +8,9 @@ from . import has_xarray, requires_xarray
 from . import has_numpy, requires_numpy
 from . import has_iteration_utilities, requires_iteration_utilities
 
+netcdffile = pyh.test_netcdf[0]
 
 def test_netcdf_basics():
-    netcdffile=pyh.test_netcdf[0]
     netcdfbasics = pyh.netcdf_basics(netcdffile)
     assert netcdfbasics.files
     assert netcdfbasics.ds
@@ -19,7 +19,6 @@ def test_netcdf_basics():
 
 
 def test_netcdf_basics_fmt():
-    netcdffile=pyh.test_netcdf
     netcdfbasics = pyh.netcdf_basics(netcdffile, fmt='%Y%m%d')
     assert netcdfbasics.fmt
 
