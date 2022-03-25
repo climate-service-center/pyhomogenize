@@ -1,5 +1,6 @@
 import xarray as xr
 import numpy as np
+from iteration_utilities import duplicates
 
 from ._netcdf_basics import netcdf_basics
 from . import _consts as consts
