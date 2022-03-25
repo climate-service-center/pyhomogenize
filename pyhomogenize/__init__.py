@@ -6,10 +6,10 @@ from .data import netcdf as test_netcdf
 from . import operators as op
 from .cli import create_parser
 
-from .classes import basics
-from .classes import netcdf_basics
-from .classes import time_control
-from .classes import time_compare
+from ._basics import basics
+from ._netcdf_basics import netcdf_basics
+from ._time_control import time_control
+from ._time_compare import time_compare
 
 from .pyhomogenize import pyhomogenize
 
