@@ -17,3 +17,9 @@ def test_netcdf_basics():
     assert netcdfbasics.name
     assert netcdfbasics.write(output='test.nc')
 
+
+def test_netcdf_basics_fmt():
+    netcdffile=pyh.test_netcdf
+    netcdfbasics = pyh.netcdf_basics(netcdffile, fmt='%Y%m%d')
+    assert netcdfbasics.fmt
+

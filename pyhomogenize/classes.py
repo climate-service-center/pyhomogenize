@@ -12,8 +12,9 @@ from . import _consts as consts
 
 class basics():
 
-    def __init__(self):
-        self.fmt = '%Y-%m-%dT%H:%M:%S'
+    def __init__(self, fmt=None):
+        if not fmt: fmt = '%Y-%m-%dT%H:%M:%S'
+        self.fmt = fmt
 
     def _convert_to_string(self, values, delim=',',fmt=None):
         converted = ''
@@ -42,13 +43,14 @@ class basics():
         f = self._get_key_to_value(consts.frequencies, frequencies)
         return consts.translator[f]
 
-    def _str_to_date(self, str, mode='start'):
+    def _str_to_date(self, str, fmt=None, mode='start'):
         i=1
+        if not fmt: fmt=self.fmt
         if mode not in ['start', 'end']: return
         while True:
             try:
-                if mode == 'start': return dt.strptime(str, self.fmt[:i])
-                if mode == 'end'  : return dt.strptime(str, self.fmt[:i]) + td(days=1) - td(seconds=1)
+                if mode == 'start': return dt.strptime(str, fmt[:i])
+                if mode == 'end'  : return dt.strptime(str, fmt[:i]) + td(days=1) - td(seconds=1)
             except:
                 i+=1
 
@@ -174,7 +176,8 @@ class basics():
 
 class netcdf_basics(basics):
 
-    def __init__(self, files):
+    def __init__(self, files, **kwargs):
+        basics.__init__(self, **kwargs)
         if isinstance(files, str): files = [files]
         self.files = files
         self.ds    = self.open()
@@ -277,12 +280,11 @@ class netcdf_basics(basics):
 
 class time_control(netcdf_basics):
 
-    def __init__(self, files):
-        basics.__init__(self)
-        netcdf_basics.__init__(self, files)
+    def __init__(self, files, **kwargs):
+        netcdf_basics.__init__(self, files, **kwargs)
         self.time        = self._convert_time(self.ds.time)
         self.frequency   = self._get_frequency()
-        self.fmt         = consts.format[self.ds.frequency]
+        self.time_fmt    = consts.format[self.ds.frequency]
         self.equalize    = consts.equalize[self.ds.frequency]
 
     def _get_frequency(self):
@@ -342,10 +344,9 @@ class time_control(netcdf_basics):
         return self
 
     def select_range(self, time_range, output=None):
-        start_date=time_range[0]
+        start_date, end_date =time_range
         if not isinstance(start_date, str):
             start_date = self._date_to_str(start_date)
-        end_date=time_range[1]
         if not isinstance(end_date, str):
             end_date = self._date_to_str(end_date)
         self.ds   = self.ds.sel(time=slice(start_date, end_date))
@@ -363,15 +364,15 @@ class time_control(netcdf_basics):
         if output: self.write(input=self.ds, output=output)
         return self
 
-    def within_time_range(self, requested_time_range):
+    def within_time_range(self, requested_time_range, fmt=None):
         avail_start = self.time[0]
         avail_end   = self.time[-1]
         req_start   = requested_time_range[0]
         req_end     = requested_time_range[-1]
         if isinstance(req_start, str):
-            req_start   = self._str_to_date(req_start, mode='start')
+            req_start   = self._str_to_date(req_start, fmt=fmt)
         if isinstance(req_end, str):
-            req_end     = self._str_to_date(req_end, mode='end')
+            req_end     = self._str_to_date(req_end, fmt=fmt, mode='end')
         try:
             key = self.ds.frequency
         except:

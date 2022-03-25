@@ -13,7 +13,4 @@ def test_time_compare():
     time_control1 = pyh.time_control(netcdffile1)
     time_control2 = pyh.time_control(netcdffile2)
 
-    assert  pyh.time_compare([time_control1.ds, time_control2.ds]).max_intersection()
-
-                        
-                
+    assert pyh.time_compare([time_control1.ds, time_control2.ds]).max_intersection()

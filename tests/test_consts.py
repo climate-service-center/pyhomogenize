@@ -32,3 +32,7 @@ def test_within():
 def test_naming():
     assert _get_keys('naming')
     assert _get_values('naming')
+
+def test_is_month():
+    assert _get_keys('is_month')
+    assert _get_values('is_month')
