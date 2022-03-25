@@ -403,16 +403,15 @@ class time_control(netcdf_basics):
 class time_compare(time_control):
     
     def __init__(self, *compare_objects, **kwargs):
-        basics.__init__(self, **kwargs)
         self.compare_objects = self._flatten_list(compare_objects)
-        self.time_control_objects = [self._to_time_control_object(cpo) for cpo in self.compare_objects]
+        self.time_control_objects = [self._to_time_control_object(cpo, **kwargs) for cpo in self.compare_objects]
         self.times = [tco.time for tco in self.time_control_objects]
 
-    def _to_time_control_object(self, identity):
+    def _to_time_control_object(self, identity, **kwargs):
         if isinstance(identity, time_control):
             return identity
         else:
-            return time_control(identity)
+            return time_control(identity, **kwargs)
 
     def max_intersection(self):
         start, end = None, None
@@ -425,10 +424,10 @@ class time_compare(time_control):
                 start, end = None, None
         return start, end
 
-    def select_max_intersection(self):
+    def select_max_intersection(self, **kwargs):
         max_intersection = self.max_intersection()
         if max_intersection == (None, None): return
-        return [tco.select_range(max_intersection) for tco in self.time_control_objects]
+        return [tco.select_range(max_intersection, **kwargs) for tco in self.time_control_objects]
 
 
 

@@ -8,7 +8,7 @@ from . import has_xarray, requires_xarray
 from . import has_numpy, requires_numpy
 from . import has_iteration_utilities, requires_iteration_utilities
 
-netcdffile   = pyh.test_netcdf
+netcdffile   = [pyh.test_netcdf[1], pyh.test_netcdf[3]]
 time_control = pyh.time_control(netcdffile)
 
 def test_get_duplicates():

@@ -15,12 +15,12 @@ def test_cli_ops():
 
 def test_cli_merge():
     parser = pyh.create_parser()
-    args = parser.parse_args(['merge','-i',pyh.test_netcdf[0],pyh.test_netcdf[1]])
+    args = parser.parse_args(['merge','-i',pyh.test_netcdf[1],pyh.test_netcdf[3]])
     assert pyh.pyhomogenize(args)
 
 def test_cli_seltimerange():
     parser = pyh.create_parser()
-    args = parser.parse_args(['seltimerange,20070501,20070630','-i',pyh.test_netcdf[0]])
+    args = parser.parse_args(['seltimerange,20070501,20070630','-i',pyh.test_netcdf[1]])
     assert pyh.pyhomogenize(args)
 
 def test_cli_showdups():
