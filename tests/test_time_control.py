@@ -3,10 +3,10 @@ import pytest
 
 import pyhomogenize as pyh
 
-#from . import has_dask, requires_dask
-#from . import has_xarray, requires_xarray
-#from . import has_numpy, requires_numpy
-#from . import has_iteration_utilities, requires_iteration_utilities
+from . import has_dask, requires_dask
+from . import has_xarray, requires_xarray
+from . import has_numpy, requires_numpy
+from . import has_iteration_utilities, requires_iteration_utilities
 
 netcdffile   = [pyh.test_netcdf[1], pyh.test_netcdf[3]]
 time_control = pyh.time_control(netcdffile)
@@ -37,4 +37,4 @@ def test_within_time_range():
 def test_select_limited_time_range():
     time_control.select_limited_time_range(output='test.nc', smonth=[3,6,9,12], emonth=[2,5,8,11])
 
-test_within_time_range()
+
