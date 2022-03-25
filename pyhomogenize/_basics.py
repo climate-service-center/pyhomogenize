@@ -12,9 +12,9 @@ class basics():
     """The :class:`basics` contains some basics functions for controlling netCDF CF standard time axis
 
     **Attributes**
-        *fmt:*
+        *fmt:* str
             Time format for converting strings into ``cftime.datetime`` object
-        *calendar:*
+        *calendar:* str
             Calendar type for the datetimes.
     """
 

@@ -3,6 +3,12 @@ import xarray as xr
 from ._basics import basics
 
 class netcdf_basics(basics):
+    """The :class:`netcdf_basics` contains :class:`basics` and functions to read an write netCDF files and xarray.Datasets.
+
+    **Attributes**
+        *files:* str or list
+            file on disk or xarray.Dataset or list of both
+    """
 
     def __init__(self, files, **kwargs):
         basics.__init__(self, **kwargs)
@@ -11,16 +17,32 @@ class netcdf_basics(basics):
         self.ds    = self.open()
         self.name = self._get_var_name()
 
-    def _is_dataset(self, input):
-        if not isinstance(input, xr.Dataset): input = self.ds
-        return input
-
     def _add_to_attrs(self, target, attr_name, value):
+        """Adds or updates attribute
+
+        Parameters
+        ----------
+        target: xr.Dataset or xr.DataArray
+            target of adding or updating attribute
+        attr_name: str
+            Name of the attribute which will be added or updated
+        value: str
+            Name of the value to be added
+        """
         if attr_name in target.attrs:
             value = target.attrs[attr_name] + ', ' + value
         target.attrs[attr_name] = value
 
     def _to_variable_attributes(self, indexes, attr_name):
+        """Adds or updates variable attributes
+        
+        Parameters
+        ----------
+        indexes: str or list
+            Attribute value to be added 
+        attr_name: str
+            Name of the attribute which will be added or updated
+        """
         var_name = self.name
         if isinstance(indexes, list):
             indexes = str(indexes)
@@ -29,6 +51,15 @@ class netcdf_basics(basics):
                 self._add_to_attrs(getattr(self.ds, var), attr_name, indexes)
 
     def _to_global_attributes(self, indexes, attr_name):
+        """Adds or updates gloabl attributes
+        
+        Parameters
+        ----------
+        indexes: str or list
+            Attribute value to be added 
+        attr_name: str
+            Name of the attribute which will be added or updated
+        """
         if isinstance(indexes, list):
             indexes = str(indexes)
         if indexes:
@@ -85,7 +116,9 @@ class netcdf_basics(basics):
         return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
 
     def open(self):
-
+        """Opens file or list of files on disk.
+        Result is automaticaly wrote to object's attributes.
+        """
         if isinstance(self.files, xr.Dataset):
             return self.files
         elif isinstance(self.files, str):
@@ -98,7 +131,24 @@ class netcdf_basics(basics):
         raise ValueError('Input files are not xarray Datasets or files on disk. You can not mix those two types.')
 
     def write(self, input=None, output=None):
-        input = self._is_dataset(input)
+        """Writes `self.ds` or user-given xr.Dataset as netCDF file on disk.
+
+        Parameters
+        ----------
+        input: xr.Dataset, optional
+            xr.Dataset to be written on disk
+        output: str, optional
+            Name of the output netCDF file
+
+        Returns
+        -------
+        self
+        """
+        def is_dataset(input):
+            if not isinstance(input, xr.Dataset): input = self.ds
+            return input
+        
+        input = is_dataset(input)
         self._to_variable_attributes(self._convert_to_string(self.files), 'associated_files')
         if not output:
             print('No output selected.')
