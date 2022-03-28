@@ -8,9 +8,9 @@ Welcome to pyhomogenize's documentation!
    readme
    installation
    usage
-   modules
    contributing
    authors
+   api
    history
 
 Indices and tables

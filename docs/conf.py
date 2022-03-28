@@ -44,6 +44,8 @@ extensions = ['sphinx.ext.autodoc',
               'IPython.sphinxext.ipython_console_highlighting',
               ]
 
+autodoc_mock_imports = []
+
 autosummary_generate = True
 
 apoleon_use_param = True
