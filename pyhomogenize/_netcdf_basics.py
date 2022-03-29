@@ -5,17 +5,30 @@ from ._basics import basics
 class netcdf_basics(basics):
     """The :class:`netcdf_basics` contains :class:`basics` and functions to read an write netCDF files and xarray.Datasets.
 
-    **Attributes**
-        *files:* str or list
-            file on disk or xarray.Dataset or list of both
+    Parameters
+    ----------
+    files: str or list
+        file on disk or xarray.Dataset or list of both
     """
 
     def __init__(self, files, **kwargs):
         basics.__init__(self, **kwargs)
         if isinstance(files, str): files = [files]
-        self.files = files
-        self.ds    = self.open()
-        self.name = self._get_var_name()
+        self.files = self.files(files)
+        self.ds    = self.ds()
+        self.name = self.name()
+
+    def files(self, files):
+        """List of input netCDF file(s) and/or xr.Dataset(s)."""
+        return files
+
+    def ds(self):
+        """Input netCDF file(s) openend as xr.Dataset(s). See method open"""
+        return self.open()
+
+    def name(self):
+        """CF variable name of `ds`. See method get_var_name"""
+        return self.get_var_name()
 
     def _add_to_attrs(self, target, attr_name, value):
         """Adds or updates attribute
@@ -33,7 +46,7 @@ class netcdf_basics(basics):
             value = target.attrs[attr_name] + ', ' + value
         target.attrs[attr_name] = value
 
-    def _to_variable_attributes(self, indexes, attr_name):
+    def to_variable_attributes(self, indexes, attr_name):
         """Adds or updates variable attributes
         
         Parameters
@@ -50,7 +63,7 @@ class netcdf_basics(basics):
             for var in var_name:
                 self._add_to_attrs(getattr(self.ds, var), attr_name, indexes)
 
-    def _to_global_attributes(self, indexes, attr_name):
+    def to_global_attributes(self, indexes, attr_name):
         """Adds or updates gloabl attributes
         
         Parameters
@@ -65,7 +78,7 @@ class netcdf_basics(basics):
         if indexes:
             self._add_to_attrs(self.ds, attr_name, indexes)
 
-    def _get_var_name(self):
+    def get_var_name(self, ds=None):
         """List of CF variables in xr.Dataset
 
         Parameters
@@ -91,6 +104,8 @@ class netcdf_basics(basics):
                     name+=[var]
             return name
 
+        if not ds: ds = self.ds
+        
         try:
             var_list = [var for var in self.ds.data_vars if condition(self.ds, var)]
             if var_list: return var_list
@@ -149,7 +164,7 @@ class netcdf_basics(basics):
             return input
         
         input = is_dataset(input)
-        self._to_variable_attributes(self._convert_to_string(self.files), 'associated_files')
+        self.to_variable_attributes(self._convert_to_string(self.files), 'associated_files')
         if not output:
             print('No output selected.')
         else:

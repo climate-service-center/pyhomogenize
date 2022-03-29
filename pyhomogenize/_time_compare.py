@@ -4,19 +4,28 @@ from ._time_control import time_control
 class time_compare(time_control):
     """The :class:`time_compare` contains the class `time_control` and functions to get the intersection of two time axis.
     
-    **Attributes**
-        *compare_objects:* list
-            List of all objects to comapre their time axes
-        *time_control_objects:* list
-            List of all `compare_objects` set to time_control objects
-        *times:* list
-            List of all time axes read from ``time_control_objects``   
+    Parameters
+    ----------
+    compare_objects: str or list or nested list
+        List of all objects to compare their time axes
     """
     def __init__(self, *compare_objects, **kwargs):
-        self.compare_objects = self._flatten_list(compare_objects)
-        self.time_control_objects = [self._to_time_control_object(cpo, **kwargs) for cpo in self.compare_objects]
-        self.times = [tco.time for tco in self.time_control_objects]
+        self.compare_objects = self.compare_objects(compare_objects)
+        self.time_control_objects = self.time_control_objects(**kwargs)
+        self.times = self.times()
 
+    def compare_objects(self, compare_objects):
+        """List of all objects to compare their time axes."""
+        return self._flatten_list(compare_objects)
+
+    def time_control_objects(self, **kwargs):
+        """List of all `compare_objects` set to time_control objects."""
+        return [self._to_time_control_object(cpo, **kwargs) for cpo in self.compare_objects]
+
+    def times(self):
+        """List of all time axes read from ``time_control_objects``."""
+        return [tco.time for tco in self.time_control_objects]
+    
     def _to_time_control_object(self, identity, **kwargs):
         """Open identity as ``time_control`` object.""" 
         if isinstance(identity, time_control):

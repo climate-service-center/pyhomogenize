@@ -7,29 +7,37 @@ from . import _consts as consts
 
 class time_control(netcdf_basics):
     """The :class:`time_control` contains the :class:`ǹetcdf_basics` and functions for dealing with a netCDF file's time axis.
-    
-    **Attributes**
-        *time:* str or list 
-            netCDF file's time axis
-        *frequency:* str
-            netCDF file's frequency
-        *time_fmt:* str or list
-            predefined explicit format string derived from `frequency`
-        *equalize:* list
-            predefined list of ``datetime.datetime`` instance attributes to be ignored
-        *calendar:* str
-            Calendar type read from netCDF file
-        
     """
         
     def __init__(self, *args, **kwargs):
         netcdf_basics.__init__(self, *args, **kwargs)
-        self.time        = self._convert_time(self.ds.time)
-        self.frequency   = self._get_frequency()
-        self.time_fmt    = consts.format[self.ds.frequency]
-        self.equalize    = consts.equalize[self.ds.frequency]
-        self.calendar    = self.time.calendar
+        self.time        = self.time()
+        self.frequency   = self.frequency()
+        self.time_fmt    = self.time_fmt()
+        self.equalize    = self.equalize()
+        del self.calendar
+        self.calendar    = self.calendar()
 
+    def time(self):
+        """netCDF file's time axis"""
+        return self._convert_time(self.ds.time)
+
+    def frequency(self):
+        """netCDF file's frequency"""
+        return self._get_frequency()
+
+    def time_fmt(self):
+        """predefined explicit format string derived from `frequency`"""
+        return consts.format[self.ds.frequency]
+
+    def equalize(self):
+        """predefined list of ``datetime.datetime`` instance attributes to be ignored"""
+        return consts.equalize[self.ds.frequency]
+
+    def calendar(self):
+        """Calendar type read from netCDF file"""
+        return self.time.calendar
+    
     def _get_frequency(self):
         """Get frequency of xr.Dataset"""
         frequency = xr.infer_freq(self.ds.time)
@@ -49,20 +57,20 @@ class time_control(netcdf_basics):
     def _missings(self):
         """Get missing time steps."""
         time       = self._equalize_time(self.time, ignore=self.equalize)
-        date_range = self._equalize_time(self._date_range(time[0], time[-1], self.frequency, calendar=self.time.calendar), ignore=self.equalize)
+        date_range = self._equalize_time(self.date_range(time[0], time[-1], self.frequency, calendar=self.time.calendar), ignore=self.equalize)
         return sorted(list(set(date_range).difference(time)))
 
     def _redundants(self):
         """Get redundant time steps."""
         time       = self._equalize_time(self.time, ignore=self.equalize)
-        date_range = self._equalize_time(self._date_range(time[0], time[-1], self.frequency, calendar=self.time.calendar), ignore=self.equalize)
+        date_range = self._equalize_time(self.date_range(time[0], time[-1], self.frequency, calendar=self.time.calendar), ignore=self.equalize)
         return sorted(list(set(time).difference(date_range)))
 
     def _write_timesteps(self, timesteps, naming):
         """Write timesteps to variable attributes."""
         timesteps = self._convert_to_string(timesteps)
         self._dictionary(naming, self.name, timesteps)
-        self._to_variable_attributes(timesteps, naming)
+        self.to_variable_attributes(timesteps, naming)
 
     def get_duplicates(self):
         """Get string of duplicated time steps.""" 
@@ -145,9 +153,9 @@ class time_control(netcdf_basics):
         """
         start_date, end_date =time_range
         if not isinstance(start_date, str):
-            start_date = self._date_to_str(start_date)
+            start_date = self.date_to_str(start_date)
         if not isinstance(end_date, str):
-            end_date = self._date_to_str(end_date)
+            end_date = self.date_to_str(end_date)
         self.ds   = self.ds.sel(time=slice(start_date, end_date))
         self.time = self._convert_time(self.ds.time)
         if output: self.write(input=self.ds, output=output)
@@ -184,8 +192,8 @@ class time_control(netcdf_basics):
         """
         start, end = self.date_range_to_frequency_limits(self, date_range=self.time,
                                                          frequency=self.frequency, **kwargs)
-        start_date = self._date_to_str(start)
-        end_date = self._date_to_str(end)
+        start_date = self.date_to_str(start)
+        end_date = self.date_to_str(end)
         self.ds   = self.ds.sel(time=slice(start_date, end_date))
         self.time = self._convert_time(self.ds.time)
         if output: self.write(input=self.ds, output=output)
@@ -220,9 +228,9 @@ class time_control(netcdf_basics):
         req_start   = requested_time_range[0]
         req_end     = requested_time_range[-1]
         if isinstance(req_start, str):
-            req_start   = self._str_to_date(req_start, fmt=fmt, calendar=self.calendar)
+            req_start   = self.str_to_date(req_start, fmt=fmt, calendar=self.calendar)
         if isinstance(req_end, str):
-            req_end     = self._str_to_date(req_end, fmt=fmt, calendar=self.calendar, mode='end')
+            req_end     = self.str_to_date(req_end, fmt=fmt, calendar=self.calendar, mode='end')
         try:
             key = self.ds.frequency
         except:

@@ -11,19 +11,26 @@ from . import _consts as consts
 class basics():
     """The :class:`basics` contains some basics functions for controlling netCDF CF standard time axis
 
-    **Attributes**
-        *fmt:* str
-            Time format for converting strings into ``cftime.datetime`` object
-        *calendar:* str
-            Calendar type for the datetimes.
+    Parameters
+    ----------
+    fmt: str, default: '%Y-%m-%dT%H:%M:%S'
+        Time format for converting strings into ``cftime.datetime`` object
+    calendar: str, default: 'standard'
+        Calendar type for the datetimes.
     """
 
-    def __init__(self, fmt=None, calendar=None):
-        if not fmt: fmt = '%Y-%m-%dT%H:%M:%S'
-        if not calendar: calendar = 'standard'
+    def __init__(self, fmt='%Y-%m-%dT%H:%M:%S', calendar='standard'):
         self.fmt = fmt
         self.calendar = calendar
-        
+
+    def fmt(self):
+        """Time format for converting strings into ``cftime.datetime`` object."""
+        return self.fmt
+
+    def calendar(self):
+        """Calendar type for the datetimes."""
+        return self.calendar
+    
     def _flatten_list(self, lst):
         """Flatten a list containing strings and lists of arbitrarily nested lists
 
@@ -51,7 +58,7 @@ class basics():
             List of strings and ``cftime.datetime`` or ``datetime.datetime`` objects
         delim: str, default: ','
             Output string delimiter between input list entries
-        fmt: str, default: ' %Y-%m-%dT%H:%M:%S'
+        fmt: str, default: '%Y-%m-%dT%H:%M:%S'
             Explicit format string for converting string into ``cftime.datetime`` object
             Consider only if list element is ``cftime.datetime`` object
         
@@ -63,7 +70,7 @@ class basics():
         converted = ''
         for v in values:
             try:
-                v = self._date_to_str(v, fmt=fmt)
+                v = self.date_to_str(v, fmt=fmt)
             except:
                 pass
             converted += str(v) + delim
@@ -123,7 +130,7 @@ class basics():
         f = self._get_key_to_value(consts.frequencies, frequencies)
         return consts.translator[f]
 
-    def _str_to_date(self, str, fmt=None, mode='start', calendar=None):
+    def str_to_date(self, str, fmt=None, mode='start', calendar=None):
         """Converts string to ``cftime.datetime`` object
 
         Parameters
@@ -156,7 +163,7 @@ class basics():
         if mode == 'start': return cfdate
         if mode == 'end': return cfdate + td(days=1) - td(seconds=1)
 
-    def _date_to_str(self, date, fmt=None):
+    def date_to_str(self, date, fmt=None):
         """Converts ``cftime.datetime`` or ``datetime.datetime`` object to string
 
         Parameters
@@ -275,7 +282,7 @@ class basics():
         if not calendar: calendar=self.calendar
         return xr.cftime_range(st, end, freq=freq, calendar=calendar)
 
-    def _date_range(self, start, end, frequency, calendar=None):
+    def date_range(self, start, end, frequency, calendar=None):
         """Build ``CFTimeIndex``
 
         Parameters
@@ -302,7 +309,7 @@ class basics():
         if isinstance(frequency, list):
             return self._mid_timestep(frequency, start, end, calendar=calendar)
 
-    def _is_month_start(self, cftime_range):
+    def is_month_start(self, cftime_range):
         """Check whether each element of ``CFTimeIndex`` is first day of the month
 
         Parameters
@@ -313,7 +320,7 @@ class basics():
         Returns
         -------
         list
-            list of True or False values
+            list of boolean values
         """
         array = []
         for cftime in cftime_range:
@@ -324,7 +331,7 @@ class basics():
             array += [False]
         return array
 
-    def _is_month_end(self, cftime_range):
+    def is_month_end(self, cftime_range):
         """Check whether each element of ``CFTimeIndex`` is last day of the month
 
         Parameters
@@ -335,7 +342,7 @@ class basics():
         Returns
         -------
         list
-            list of True or False values
+            list of boolean values
         """
 
         array = []
@@ -356,8 +363,7 @@ class basics():
                                        emonth=[12,11,10,9,8,7,6,5,4,3,2,1],
                                        is_month_start=None,
                                        is_month_end=None):
-        """
-        Get bounds of CFTimeIndex which satisfy user-given conditions.
+        """Get bounds of CFTimeIndex which satisfy user-given conditions.
 
         Parameters
         ----------
@@ -409,15 +415,15 @@ class basics():
                 frequency = consts.frequencies[frequency]
         if date_range is None:
             if not start or not end: return None, None
-            date_range = self._date_range(start, end, frequency, calendar=calendar)
+            date_range = self.date_range(start, end, frequency, calendar=calendar)
         start = date_range[0]
         end   = date_range[-1]
         sdate_range = copy.copy(date_range)
         edate_range = copy.copy(date_range)
         if is_month_start is None: is_month_start = consts.is_month[self._get_date_attr(frequency)]
         if is_month_end is None: is_month_start = consts.is_month[self._get_date_attr(frequency)]
-        if is_month_start: sdate_range=date_range[self._is_month_start(date_range)]
-        if is_month_end: edate_range=date_range[self._is_month_end(date_range)]
+        if is_month_start: sdate_range=date_range[self.is_month_start(date_range)]
+        if is_month_end: edate_range=date_range[self.is_month_end(date_range)]
         if sdate_range.empty: return None, None
         if edate_range.empty: return None, None
         for sdate in sdate_range:
