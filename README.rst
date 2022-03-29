@@ -5,7 +5,7 @@ Homogenize NetCDF files to CF standard: pyhomogenize
 .. image:: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml
     
-.. image:: https://codecov.io/gh/ludwiglierhammer/pyhomogenize/branch/master/graph/badge.svg
+.. image:: https://codecov.io/gh/ludwiglierhammer/pyhomogenize/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/ludwiglierhammer/pyhomogenize
     
 .. image:: https://readthedocs.org/projects/pyhomogenize/badge/?version=latest
