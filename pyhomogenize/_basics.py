@@ -20,9 +20,9 @@ class basics():
     """
 
     def __init__(self, fmt='%Y-%m-%dT%H:%M:%S', calendar='standard', frequency='D'):
-        self.fmt = self.fmt(fmt)
-        self.calendar = self.calendar(calendar)
-        self.frequency = self.frequency(frequency)
+        self.fmt = fmt
+        self.calendar = calendar
+        self.frequency = frequency
 
     def fmt(self, fmt):
         """Time format for converting strings into ``cftime.datetime`` object."""
