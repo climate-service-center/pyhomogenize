@@ -35,18 +35,17 @@ import pyhomogenize
 extensions = [
     "sphinx.ext.autodoc",
     "sphinx.ext.autosummary",
+    "sphinx.ext.viewcode",
     "sphinx.ext.extlinks",
     "sphinx.ext.mathjax",
     "sphinx.ext.napoleon",
+    "sphinxcontrib.mockautodoc",
     "numpydoc",
+    "nbsphinx",
+    "nbsphinx_link",
     "IPython.sphinxext.ipython_directive",
     "IPython.sphinxext.ipython_console_highlighting",
 ]
-
-#extlinks = {
-#    "issue": ("https://github.com/regionmask/regionmask/issues/%s", "GH"),
-#    "pull": ("https://github.com/regionmask/regionmask/pull/%s", "PR"),
-#}
 
 autosummary_generate = True
 
@@ -69,7 +68,7 @@ source_suffix = ".rst"
 master_doc = "index"
 
 # General information about the project.
-project = "regionmask"
+project = "pyhomogenize"
 copyright = "2021-2022, Ludwig Lierhammer"
 
 # The version info for the project you're documenting, acts as replacement for
@@ -212,7 +211,6 @@ htmlhelp_basename = "pyhomogenizedoc"
 
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
-#man_pages = [("index", "regionmask", "regionmask Documentation", ["Mathias Hauser"], 1)]
 
 # If true, show URL addresses after external links.
 # man_show_urls = False

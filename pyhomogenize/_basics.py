@@ -20,21 +20,21 @@ class basics():
     """
 
     def __init__(self, fmt='%Y-%m-%dT%H:%M:%S', calendar='standard', frequency='D'):
-        self.fmt = fmt
-        self.calendar = calendar
-        self.frequency = frequency
+        self.fmt = self.fmt(fmt)
+        self.calendar = self.calendar(calendar)
+        self.frequency = self.frequency(frequency)
 
-    def fmt(self):
+    def fmt(self, fmt):
         """Time format for converting strings into ``cftime.datetime`` object."""
-        return self.fmt
+        return fmt
 
-    def calendar(self):
+    def calendar(self, calendar):
         """Calendar type for the datetimes. Will be overwritten by netCDF file's inherent calendar."""
-        return self.calendar
+        return calendar
 
-    def frequency(self):
+    def frequency(self, frequency):
         """Frequency strings or list of strings can have multiples. Will be overwritten by netCDF file's inherent frequency."""
-        return self.frequency
+        return frequency
     
     def _flatten_list(self, lst):
         """Flatten a list containing strings and lists of arbitrarily nested lists
@@ -417,6 +417,8 @@ class basics():
         It returns the tuple (2005-03-16 00:00:00 2005-11-16 00:00:00)::
 
             from pyhomogenize import basics
+        
+            basics = basics()
 
             start, end = basics.date_range_to_frequency_limits(start='2005-01-01',
                                                                  end='2005-12-30',

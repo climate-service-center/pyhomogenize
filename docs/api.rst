@@ -14,7 +14,7 @@ Basic functions for controlling netCDF CF standard time axis
 
 .. autoclass:: basics
 
-   .. automethod:: basics.__init__
+   .. automethod:: __init__
 
    .. rubric:: Methods
 
@@ -40,7 +40,7 @@ Basic functions for controlling netCDF CF standard time axis
 
       basics.calendar
 
-      basics.frequency
+      basics.frequency   
         
 Basic functions to read an write netCDF files
 ---------------------------------------------
@@ -136,8 +136,6 @@ Functions to get the intersection of multiple netCDF files's time axis
       time_compare.time_control_objects
 
       time_compare.times
-
-PageBreak      
       
 Class methods
 =============

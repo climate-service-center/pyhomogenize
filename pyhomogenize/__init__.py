@@ -7,7 +7,6 @@ from . import operators as op
 from .cli import create_parser
 
 from ._basics import basics
-basics = basics()
 from ._netcdf_basics import netcdf_basics
 from ._time_control import time_control
 from ._time_compare import time_compare

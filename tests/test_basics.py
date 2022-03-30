@@ -8,7 +8,7 @@ import pyhomogenize as pyh
 from . import has_xarray, requires_xarray
 
 def test_date_range_to_frequency_limits():
-    basics = pyh.basics
+    basics = pyh.basics()
     start  = '2005-03-02'
     end    = '2005-12-25'
     smonth = [3,6,9,12]
