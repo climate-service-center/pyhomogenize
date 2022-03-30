@@ -8,6 +8,7 @@ Welcome to pyhomogenize's documentation!
    readme
    installation
    usage
+   basics
    contributing
    authors
    api

@@ -39,6 +39,8 @@ Basic functions for controlling netCDF CF standard time axis
       basics.fmt
 
       basics.calendar
+
+      basics.frequency
         
 Basic functions to read an write netCDF files
 ---------------------------------------------
@@ -201,6 +203,8 @@ Class attributes
 .. automethod:: basics.fmt
 
 .. automethod:: basics.calendar
+
+.. automethod:: basics.frequency
 
 .. automethod:: netcdf_basics.files
 

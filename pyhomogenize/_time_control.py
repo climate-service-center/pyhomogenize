@@ -12,6 +12,7 @@ class time_control(netcdf_basics):
     def __init__(self, *args, **kwargs):
         netcdf_basics.__init__(self, *args, **kwargs)
         self.time        = self.time()
+        del self.frequency
         self.frequency   = self.frequency()
         self.time_fmt    = self.time_fmt()
         self.equalize    = self.equalize()
@@ -163,7 +164,7 @@ class time_control(netcdf_basics):
 
     def select_limited_time_range(self, output=None, **kwargs):
         """Select time slice from xr.Dataset satisfying user-given conditions.
-        See pyh.basics().date_range_to_frequency_limits.
+        See pyh.basics.date_range_to_frequency_limits.
 
         Parameters
         ----------

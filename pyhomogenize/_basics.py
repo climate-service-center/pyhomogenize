@@ -19,17 +19,22 @@ class basics():
         Calendar type for the datetimes.
     """
 
-    def __init__(self, fmt='%Y-%m-%dT%H:%M:%S', calendar='standard'):
+    def __init__(self, fmt='%Y-%m-%dT%H:%M:%S', calendar='standard', frequency='D'):
         self.fmt = fmt
         self.calendar = calendar
+        self.frequency = frequency
 
     def fmt(self):
         """Time format for converting strings into ``cftime.datetime`` object."""
         return self.fmt
 
     def calendar(self):
-        """Calendar type for the datetimes."""
+        """Calendar type for the datetimes. Will be overwritten by netCDF file's inherent calendar."""
         return self.calendar
+
+    def frequency(self):
+        """Frequency strings or list of strings can have multiples. Will be overwritten by netCDF file's inherent frequency."""
+        return self.frequency
     
     def _flatten_list(self, lst):
         """Flatten a list containing strings and lists of arbitrarily nested lists
@@ -217,6 +222,12 @@ class basics():
                 n += 1
         return time.tolist()
 
+    def _interpret_frequency(self, freq):
+        if isinstance(freq, str):
+            if freq in consts.frequencies.keys():
+                freq = consts.frequencies[freq]
+        return freq
+
     def _mid_timestep(self, freq, st, end, calendar=None):
         """Build ``CFTimeIndex`` 
         Set elements between user-given frequencies
@@ -282,7 +293,7 @@ class basics():
         if not calendar: calendar=self.calendar
         return xr.cftime_range(st, end, freq=freq, calendar=calendar)
 
-    def date_range(self, start, end, frequency, calendar=None):
+    def date_range(self, start, end, frequency='D', calendar=None):
         """Build ``CFTimeIndex``
 
         Parameters
@@ -303,12 +314,13 @@ class basics():
         CFTimeIndex
         """
         if not calendar: calendar = self.calendar
+        frequency = self._interpret_frequency(frequency)
         function = xr.cftime_range
         if isinstance(frequency, str):
             return self._point_timestep(frequency, start, end, calendar=calendar)
         if isinstance(frequency, list):
             return self._mid_timestep(frequency, start, end, calendar=calendar)
-
+    
     def is_month_start(self, cftime_range):
         """Check whether each element of ``CFTimeIndex`` is first day of the month
 
@@ -357,23 +369,24 @@ class basics():
     def date_range_to_frequency_limits(self, start=None,
                                        end=None,
                                        date_range=None,
-                                       frequency='mon',
+                                       frequency=None,
                                        calendar=None,
                                        smonth=[1,2,3,4,5,6,7,8,9,10,11,12],
                                        emonth=[12,11,10,9,8,7,6,5,4,3,2,1],
                                        is_month_start=None,
-                                       is_month_end=None):
+                                       is_month_end=None,
+                                       get_range=False):
         """Get bounds of CFTimeIndex which satisfy user-given conditions.
 
         Parameters
         ----------
-        start: str, optional
+        start: str or datetime.datetime or cftime.cftime, optional
             Left bound for generating dates
-        end: str, optional
+        end: str or datetime.datetime or cftime.cftime, optional
             Right bound for generating dates
         date_range: CFTimeIndex
             CFTimeIndex containing cftime.datetime objects
-        frequency: str ot list, default:'mon'
+        frequency: str ot list, default:'D'
             CF frequency string or list of CF frequency strings or frequency string or list of frequency strings for use with ``cftime`` calendars
             https://xarray.pydata.org/en/stable/generated/xarray.cftime_range.html
         calendar: str, default: 'standard'
@@ -388,6 +401,9 @@ class basics():
         is_month_end: bool, optional
             Value of right bound's ``datetime.datetime`` instance attribute day must be equal to last day of the month
            Automatically set to True for sub_monthly frequencies
+        get_range: bool, default:False
+            If False returns left and right bounds
+            If True returns CFTimeIndex
 
         Returns
         -------
@@ -402,20 +418,19 @@ class basics():
 
             from pyhomogenize import basics
 
-            start, end = basics().date_range_to_frequency_limits(start='2005-01-01',
+            start, end = basics.date_range_to_frequency_limits(start='2005-01-01',
                                                                  end='2005-12-30',
                                                                  smonth=[3,6,9,12],
                                                                  emonth=[2,5,8,11],
                                                                  calendar='360_day')
       
         """
-        if not calendar: calendar = self.calendar
-        if isinstance(frequency, str):
-            if frequency in consts.frequencies.keys():
-                frequency = consts.frequencies[frequency]
         if date_range is None:
-            if not start or not end: return None, None
-            date_range = self.date_range(start, end, frequency, calendar=calendar)
+            if not frequency: frequency = self.frequency
+            if not calendar: calendar = self.calendar
+            frequency = self._interpret_frequency(frequency)
+            if start is None or end is None: return None, None
+            date_range = self.date_range(start, end, frequency=frequency, calendar=calendar)
         start = date_range[0]
         end   = date_range[-1]
         sdate_range = copy.copy(date_range)
@@ -436,4 +451,7 @@ class basics():
             if edate.month in emonth: break
             edate=None
         if not edate: return None, None
-        return sdate, edate
+        if get_range:
+            return xr.CFTimeIndex([cft for cft in date_range if cft >= sdate and cft <= edate])
+        else:
+            return sdate, edate
