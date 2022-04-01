@@ -11,6 +11,7 @@ Pyhomogenize time creating and manipulating classes
 
 .. toctree::
    :maxdepth: 2
+	      
    api_basics
 
 .. toctree::

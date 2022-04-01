@@ -9,6 +9,9 @@ Welcome to pyhomogenize's documentation!
    installation
    usage
    basics
+   time_control
+   time_compare
+   cli
    contributing
    authors
    api
