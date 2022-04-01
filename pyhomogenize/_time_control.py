@@ -125,7 +125,9 @@ class time_control(netcdf_basics):
             self._write_timesteps(add, nmng)
         timesteps = [n for n,t in enumerate(time) if n not in list(dict.fromkeys(deletes))]
         if output: correct = True
-        if correct: self.ds = self.ds.isel(time=timesteps)
+        if correct:
+            self.ds = self.ds.isel(time=timesteps)
+            self.time = self._convert_time(self.ds.time)
         if output:
             self.write(input=self.ds, output=output)
         return self
