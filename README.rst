@@ -28,18 +28,17 @@ See https://cfconventions.org
 Features
 --------
 
-At the moment mainly four python classes are defined.
+* basics: This class creates a fixed frequency CFTimeIndex from user-given start and end dates.
+  You can manipulate the CFTimeIndex and crop it to user-specific conditions.
 
-* netcdf_basics: This class opens one or multiple NetCDF files by calling the class.
-  You can manipulate the NetCDF attributes and write it to a new file.
-
-* time_basics: This class creates a fixed frequency CFTimeIndex from user-given start and end dates.
+* netcdf_basics: This class opens one or multiple netCDF files by calling the class.
+  You can manipulate the netCDF attributes and write it to a new file.
 
 * time_control: This class is a time checker for NetCDF files following CF Metadata Conventions.
-  It is based on pyhomogenize's netcdf_basics class. Thus it opens the NetCDF files by calling the class.
+  It is based on pyhomogenize's netcdf_basics class. Thus it opens the netCDF files by calling the class.
 
-* time_match: This class compares to xr.datasets and returns the maximum temporal intersection
-  Firstly you have to open the datasets with netcdf_basics or time_control
+* time_compare: This class compares the time axes of list entires of multiple xr.datasets, netCDF files and/or time_control objects.
+  
   
 Instalation
 -----------
