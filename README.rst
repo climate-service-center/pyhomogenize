@@ -15,8 +15,8 @@ Homogenize NetCDF files to CF standard: pyhomogenize
     :target: https://pyhomogenize.readthedocs.io/en/latest/?version=latest
     :alt: Documentation Status  
     
-.. image:: https://results.pre-commit.ci/badge/github/euro-cordex/py-cordex/master.svg
-   :target: https://results.pre-commit.ci/latest/github/euro-cordex/py-cordex/master
+.. image:: https://results.pre-commit.ci/badge/github/ludwiglierhammer/pyhomogenize/master.svg
+   :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/master
    :alt: pre-commit.ci status    
    
 .. image:: https://pyup.io/repos/github/ludwiglierhammer/pyhomogenize/shield.svg
