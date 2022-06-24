@@ -18,6 +18,7 @@ Homogenize NetCDF files to CF standard: pyhomogenize
 .. image:: https://results.pre-commit.ci/badge/github/ludwiglierhammer/pyhomogenize/main.svg
    :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/main
    :alt: pre-commit.ci status
+
 Tool to homogenize netCDF to CF standard files using xarray
 
 See https://cfconventions.org
@@ -41,7 +42,7 @@ Features
 
 
 Installation
------------
+------------
 You can install the package directly with pip:
 
 .. code-block:: console
