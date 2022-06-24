@@ -10,12 +10,12 @@ with open("README.rst") as readme_file:
 with open("HISTORY.rst") as history_file:
     history = history_file.read()
 
-with open("pyhomogenize/__init__.py") as init_file:
-    lines = init_file.read().strip().replace(" ", "").split("\n")
-    for line in lines:
-        if "__version__" in line:
-            __version__ = line.split("=")[-1]
-            break
+# with open("pyhomogenize/__init__.py") as init_file:
+#    lines = init_file.read().strip().replace(" ", "").split("\n")
+#    for line in lines:
+#        if "__version__" in line:
+#            __version__ = line.split("=")[-1]
+#            break
 
 
 def _read_txt(txt_file):
@@ -60,6 +60,6 @@ setup(
     test_suite="tests",
     tests_require=test_requirements,
     url="https://github.com/ludwiglierhammer/pyhomogenize",
-    version=__version__,
+    version="0.1.1",
     zip_safe=False,
 )
