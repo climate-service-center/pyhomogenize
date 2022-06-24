@@ -8,8 +8,8 @@ Homogenize NetCDF files to CF standard: pyhomogenize
 .. image:: https://codecov.io/gh/ludwiglierhammer/pyhomogenize/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/ludwiglierhammer/pyhomogenize
     
-.. image:: https://img.shields.io/pypi/v/py-cordex.svg
-    :target: https://pypi.python.org/pypi/py-cordex
+.. image:: https://img.shields.io/pypi/v/pyhomogenize.svg
+    :target: https://pypi.python.org/pypi/pyhomogenize
     
 .. image:: https://readthedocs.org/projects/pyhomogenize/badge/?version=latest
     :target: https://pyhomogenize.readthedocs.io/en/latest/?version=latest
