@@ -1,9 +1,13 @@
-from . import (merge, seltimerange, showdups, showmiss, showreds,
-               showtimestamps, showvar, timecheck)
+from . import merge  # noqa
+from . import seltimerange  # noqa
+from . import showdups  # noqa
+from . import showmiss  # noqa
+from . import showreds  # noqa
+from . import showtimestamps  # noqa
+from . import showvar  # noqa
+from . import timecheck  # noqa
 
-operators = """
-
-All available operators implemented:
+operators = """All available operators implemented:
 Arguments in brackets are optional.
 """
 

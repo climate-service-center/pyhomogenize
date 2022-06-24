@@ -5,8 +5,12 @@ import pytest
 
 import pyhomogenize as pyh
 
-from . import (has_dask, has_numpy, has_xarray, requires_dask, requires_numpy,
-               requires_xarray)
+from . import has_dask  # noqa
+from . import has_numpy  # noqa
+from . import has_xarray  # noqa
+from . import requires_dask  # noqa
+from . import requires_numpy  # noqa
+from . import requires_xarray  # noqa
 
 
 def test_time_compare():
