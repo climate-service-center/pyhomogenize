@@ -15,10 +15,9 @@ Homogenize NetCDF files to CF standard: pyhomogenize
     :target: https://pyhomogenize.readthedocs.io/en/latest/?version=latest
     :alt: Documentation Status
 
-.. image:: https://results.pre-commit.ci/badge/github/ludwiglierhammer/pyhomogenize/master.svg
-   :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/master
+.. image:: https://results.pre-commit.ci/badge/github/ludwiglierhammer/pyhomogenize/main.svg
+   :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/main
    :alt: pre-commit.ci status
-
 Tool to homogenize netCDF to CF standard files using xarray
 
 See https://cfconventions.org
