@@ -19,12 +19,6 @@ Homogenize NetCDF files to CF standard: pyhomogenize
    :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/master
    :alt: pre-commit.ci status
 
-.. image:: https://pyup.io/repos/github/ludwiglierhammer/pyhomogenize/shield.svg
-    :target: https://pyup.io/repos/github/ludwiglierhammer/pyhomogenize/
-    :alt: Updates
-
-
-
 Tool to homogenize netCDF to CF standard files using xarray
 
 See https://cfconventions.org
@@ -47,13 +41,13 @@ Features
 * time_compare: This class compares the time axes of list entires of multiple xr.datasets, netCDF files and/or time_control objects.
 
 
-Instalation
+Installation
 -----------
-You can install the package directly from github using pip:
+You can install the package directly with pip:
 
 .. code-block:: console
 
-     pip install git+https://github.com/ludwiglierhammer/pyhomogenize
+     pip install pyhomogenize
 
 If you want to contribute, I recommend cloning the repository and installing the package in development mode, e.g.
 
