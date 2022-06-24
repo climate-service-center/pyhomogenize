@@ -6,7 +6,7 @@ Converting string to cftime.datetime object and vice versa
 .. automethod:: basics.str_to_date
 
 .. automethod:: basics.date_to_str
-		
+
 Creating and manipulating time axis
 -----------------------------------
 
@@ -31,7 +31,7 @@ Checking self-created or netCDF file's time axis
 ------------------------------------------------
 
 .. automethod:: basics.is_month_start
-		
+
 .. automethod:: basics.is_month_end
 
 .. automethod:: time_control.get_duplicates
@@ -46,7 +46,7 @@ Checking self-created or netCDF file's time axis
 
 .. automethod:: time_control.select_limited_time_range
 
-.. automethod:: time_control.within_time_range		
+.. automethod:: time_control.within_time_range
 
 Comparing time axes of several netCDF files and/or xr.Datasets
 --------------------------------------------------------------

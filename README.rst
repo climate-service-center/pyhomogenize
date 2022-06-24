@@ -4,24 +4,24 @@ Homogenize NetCDF files to CF standard: pyhomogenize
 
 .. image:: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml/badge.svg
     :target: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml
-    
+
 .. image:: https://codecov.io/gh/ludwiglierhammer/pyhomogenize/branch/main/graph/badge.svg
     :target: https://codecov.io/gh/ludwiglierhammer/pyhomogenize
-    
+
 .. image:: https://img.shields.io/pypi/v/py-cordex.svg
     :target: https://pypi.python.org/pypi/py-cordex
-    
+
 .. image:: https://readthedocs.org/projects/pyhomogenize/badge/?version=latest
     :target: https://pyhomogenize.readthedocs.io/en/latest/?version=latest
-    :alt: Documentation Status  
-    
+    :alt: Documentation Status
+
 .. image:: https://results.pre-commit.ci/badge/github/ludwiglierhammer/pyhomogenize/master.svg
    :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/master
-   :alt: pre-commit.ci status    
-   
+   :alt: pre-commit.ci status
+
 .. image:: https://pyup.io/repos/github/ludwiglierhammer/pyhomogenize/shield.svg
     :target: https://pyup.io/repos/github/ludwiglierhammer/pyhomogenize/
-    :alt: Updates   
+    :alt: Updates
 
 
 
@@ -45,8 +45,8 @@ Features
   It is based on pyhomogenize's netcdf_basics class. Thus it opens the netCDF files by calling the class.
 
 * time_compare: This class compares the time axes of list entires of multiple xr.datasets, netCDF files and/or time_control objects.
-  
-  
+
+
 Instalation
 -----------
 You can install the package directly from github using pip:
@@ -62,7 +62,7 @@ If you want to contribute, I recommend cloning the repository and installing the
     git clone https://github.com/ludwiglierhammer/pyhomogenize.git
     cd pyhomogenize
     pip install -e .
-    
+
 This will install the package but you can still edit it and you don't need the package in your :code:`PYTHONPATH`
 
 Requirements
@@ -76,7 +76,7 @@ Requirements
 
 * iteration_utilities
 
-* xarray 
+* xarray
 
 Contact
 -------
@@ -91,4 +91,3 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
-

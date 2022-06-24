@@ -42,4 +42,3 @@ Once you have a copy of the source, you can install it with:
 
 
 .. _Gitlab repo: https://github.com/ludwiglierhammer/pyhomogenize
-

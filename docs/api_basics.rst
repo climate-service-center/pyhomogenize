@@ -31,4 +31,4 @@ Basic functions for controlling netCDF CF standard time axis
 
       basics.calendar
 
-      basics.frequency   
+      basics.frequency

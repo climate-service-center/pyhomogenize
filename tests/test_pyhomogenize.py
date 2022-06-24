@@ -5,8 +5,6 @@
 
 import unittest
 
-from pyhomogenize import pyhomogenize
-
 
 class TestNetcdf_time_control(unittest.TestCase):
     """Tests for `pyhomogenize` package."""

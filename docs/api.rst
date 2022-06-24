@@ -11,14 +11,14 @@ Pyhomogenize time creating and manipulating classes
 
 .. toctree::
    :maxdepth: 2
-	      
+
    api_basics
 
 .. toctree::
    :maxdepth: 2
 
    api_netcdf_basics
-   
+
 .. toctree::
    :maxdepth: 2
 
@@ -28,7 +28,7 @@ Pyhomogenize time creating and manipulating classes
    :maxdepth: 2
 
    api_time_compare
-      
+
 Methods for creating, reading and manipulating CF time axes
 ===========================================================
 
@@ -42,5 +42,5 @@ pyhomogenize's attributes
 
 .. toctree::
    :maxdepth: 2
-		
+
    api_attributes

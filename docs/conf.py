@@ -10,14 +10,14 @@
 # All configuration values have a default; values that are commented out
 # serve to show the default.
 
-import datetime
 import os
-import sys  # NOQA
+import sys
 import warnings
 from subprocess import call
-sys.path.insert(0, os.path.abspath('..'))
 
 import pyhomogenize
+
+sys.path.insert(0, os.path.abspath(".."))
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
@@ -76,7 +76,7 @@ copyright = "2021-2022, Ludwig Lierhammer"
 # built documents.
 #
 # The short X.Y version.
-version = pyhomogenize.__version__#.split("+")[0]
+version = pyhomogenize.__version__  # .split("+")[0]
 # The full version, including alpha/beta/rc tags.
 release = pyhomogenize.__version__
 
@@ -92,7 +92,7 @@ release = pyhomogenize.__version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ["_build", "**.ipynb_checkpoints"]#, "logo"]
+exclude_patterns = ["_build", "**.ipynb_checkpoints"]  # , "logo"]
 
 # The reST default role (used for this markup: `text`) to use for all
 # documents.
@@ -151,7 +151,7 @@ html_theme = "sphinx_rtd_theme"
 # The name of an image file (within the static path) to use as favicon of the
 # docs.  This file should be a Windows icon file (.ico) being 16x16 or 32x32
 # pixels large.
-#html_favicon = "logo/favicon.ico"
+# html_favicon = "logo/favicon.ico"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
@@ -222,7 +222,7 @@ call("conda list", shell=True)
 warnings.filterwarnings("ignore")
 
 
-#notebooks = (
+# notebooks = (
 #    "notebooks/method",
 #    "notebooks/plotting",
 #    "notebooks/mask_2D",
@@ -230,7 +230,7 @@ warnings.filterwarnings("ignore")
 #    "notebooks/geopandas",
 #    "notebooks/overlap",
 #    "notebooks/create_own_regions",
-#)
+# )
 notebooks = ()
 print("\nBuilding notebooks:")
 for nb in notebooks:

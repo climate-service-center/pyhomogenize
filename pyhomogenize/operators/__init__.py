@@ -1,12 +1,5 @@
-
-from . import merge
-from . import showvar
-from . import seltimerange
-from . import showtimestamps
-from . import showdups
-from . import showmiss
-from . import showreds
-from . import timecheck
+from . import (merge, seltimerange, showdups, showmiss, showreds,
+               showtimestamps, showvar, timecheck)
 
 operators = """
 
