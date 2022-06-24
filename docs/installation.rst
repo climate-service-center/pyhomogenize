@@ -8,11 +8,11 @@ Installation
 Stable release
 --------------
 
-To install pyhomogenize, run this command in your terminal:
+To install pyhomogenize with pip, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install https://github.com/ludwiglierhammer/pyhomogenize
+    $ pip install pyhomogenize
 
 This is the preferred method to install pyhomogenize, as it will always install the most recent stable release.
 
