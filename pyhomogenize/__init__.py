@@ -16,13 +16,9 @@ from .cli import create_parser
 from .data import netcdf as test_netcdf
 from .pyhomogenize import pyhomogenize
 
-try:
-    __version__ = pkg_resources.get_distribution("pyhomogenize").version
-except Exception:
-    __version__ = "999"
-
 __author__ = """Ludwig Lierhammer"""
 __email__ = "ludwig.lierhammer@hereon.de"
+__version__ = 0.1.0
 
 _all__ = [
     "consts",
