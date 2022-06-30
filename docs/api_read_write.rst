@@ -1,3 +1,3 @@
 .. currentmodule:: pyhomogenize
 
-.. automethod:: read_write
+.. autosummary:: read_write
