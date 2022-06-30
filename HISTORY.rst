@@ -26,3 +26,10 @@ History
 ------------------
 
 * Expand HISTORY.rst
+
+0.2.0 (2022-06-30)
+------------------
+
+* Outsource useful functions for reading and writing large netCDF files.
+* Use those functiosn directly from pyhomogenize.
+* Calling pyhomogenize classes is not needed.
