@@ -155,7 +155,7 @@ class time_control(netcdf_basics):
             self.ds = self.ds.isel(time=timesteps)
             self.time = self._convert_time(self.ds.time)
         if output:
-            self.write(input=self.ds, output=output)
+            self.write(output=output)
         return self
 
     def select_time_range(self, time_range, output=None):
@@ -191,7 +191,7 @@ class time_control(netcdf_basics):
         self.ds = self.ds.sel(time=slice(start_date, end_date))
         self.time = self._convert_time(self.ds.time)
         if output:
-            self.write(input=self.ds, output=output)
+            self.write(output=output)
         return self
 
     def select_limited_time_range(self, output=None, **kwargs):
@@ -237,7 +237,7 @@ class time_control(netcdf_basics):
         self.ds = self.ds.sel(time=slice(start_date, end_date))
         self.time = self._convert_time(self.ds.time)
         if output:
-            self.write(input=self.ds, output=output)
+            self.write(output=output)
         return self
 
     def within_time_range(self, requested_time_range, fmt=None):
