@@ -29,6 +29,8 @@ See https://cfconventions.org
 Features
 --------
 
+* some useful functions to read and write large netCDF files
+
 * basics: This class creates a fixed frequency CFTimeIndex from user-given start and end dates.
   You can manipulate the CFTimeIndex and crop it to user-specific conditions.
 
