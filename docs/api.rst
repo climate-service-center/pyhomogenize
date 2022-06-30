@@ -6,13 +6,16 @@ API reference
 
 This page provides an auto-generated summary of the pyhomogenize API.
 
-Pyhomogenize time creating and manipulating classes
-===================================================
+Useful functions to read and write large netCDF files
+=====================================================
 
 .. toctree::
    :maxdepth: 2
 
    api_read_write
+
+Pyhomogenize time creating and manipulating classes
+===================================================
 
 .. toctree::
    :maxdepth: 2
