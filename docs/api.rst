@@ -6,13 +6,18 @@ API reference
 
 This page provides an auto-generated summary of the pyhomogenize API.
 
-Useful functions to read and write large netCDF files
-=====================================================
+Useful functions for reading and writing large netCDF files
+===========================================================
 
 .. toctree::
    :maxdepth: 2
 
-   api_read_write
+.. automethod:: read_write.open_xrdataset
+
+.. automethod:: read_write.get_var_name
+
+.. automethod:: read_write.save_to_netcdf
+
 
 Pyhomogenize time creating and manipulating classes
 ===================================================

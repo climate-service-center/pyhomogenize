@@ -21,8 +21,6 @@ Reading, writing and manipulating netCDF file(s)
 
 .. automethod:: netcdf_basics.write
 
-.. automethod:: netcdf_basics.get_var_name
-
 .. automethod:: netcdf_basics.to_global_attributes
 
 .. automethod:: netcdf_basics.to_variable_attributes

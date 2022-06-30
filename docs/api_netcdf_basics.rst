@@ -15,8 +15,6 @@ Basic functions to read an write netCDF files
 
       netcdf_basics.write
 
-      netcdf_basics.get_var_name
-
       netcdf_basics.to_global_attributes
 
       netcdf_basics.to_variable_attributes
