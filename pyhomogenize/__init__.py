@@ -3,14 +3,13 @@
 
 """Top-level package for pyhomogenize."""
 
-import _read_write as read_write
-from cli import create_parser
-
+from . import _read_write as read_write
 from ._basics import basics
 from ._netcdf_basics import netcdf_basics
 from ._read_write import get_var_name, open_xrdataset, save_to_netcdf
 from ._time_compare import time_compare
 from ._time_control import time_control
+from .cli import create_parser
 from .data import netcdf as test_netcdf
 from .pyhomogenize import pyhomogenize
 
