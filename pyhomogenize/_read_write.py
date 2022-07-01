@@ -119,8 +119,8 @@ def get_chunksizes(
 
 def get_encoding(
     ds,
+    encoding={},
     MISSVAL=1e20,
-    chunking=True,
     chunk_dict={},
 ):
     """Get encoding for each CF variable in dataset.
@@ -129,25 +129,25 @@ def get_encoding(
     ----------
     ds: xr.Dataset
         Dataset containing CF variables.
+    encoding: dict
+        Encoding dictionary
     MISSVAL: float, optional
         Missing value.
-    chunking: bool, optional
-        If true call `get_chunksizes`.
-    chunk_dict: dict, optional
+    chunk_dict: dict or None, optional
         Dictionary with parameters for `get_chunksizes`.
-
+        If None do not chunk dimension.
+        If empty call `get_chunksizes` with default values.
     Returns
     -------
     dict
         Encoding dictionary
     """
-    encoding = {}
     for var in get_var_name(ds):
-        encoding[var] = {
-            "_FillValue": MISSVAL,
-            "missing_value": MISSVAL,
-        }
-        if chunking:
+        if not var in encoding.keys():
+            encoding[var] = {}
+        encoding[var]["_FillValue"] = MISSVAL
+        encoding[var]["missing_value"] = MISSVAL
+        if isinstance(chunk_dict, dict):
             encoding[var]["chunksizes"] = get_chunksizes(
                 ds[var],
                 **chunk_dict,
@@ -155,10 +155,12 @@ def get_encoding(
     return encoding
 
 
-def save_to_netcdf(
+def save_xrdataset(
     ds,
-    name,
-    encoding={},
+    name=None,
+    encoding_dict={},
+    format="NETCDF4",
+    unlimited_dims={"time": True},
     compute=True,
 ):
     """Save dataset as netCDF file.
@@ -167,32 +169,40 @@ def save_to_netcdf(
     ----------
     ds: xr.Dataset
         Dataset to save on disk.
-    name: str
+    name: str, optional
         name of the netcdf output file
-    encoding: dict or None, optional
+    encoding_dict: dict or None, optional
         Encoding dictionary for `get_encoding`.
+        If dict call `get_encoding` with dict values as parameters.
+        If empty call `get_encoding` with default values.
+        If None encoding = {}.
+    format: str, optional
+        File format for the resulting netCDF file
+    unlimited_dims: dict
+        Dimension(s) that should be serialized as unlimited dimensions.
+        By default, no dimensions are treated as unlimited dimensions.
     compute: bool, optional
         If true compute immediately, otherwise return a
         `dask.delayed.Delayed` object that can be computed later.
 
     Returns
     -------
-        * ``bytes`` if path is None
+        * ``bytes`` if name is None
         * ``dask.delayed.Delayed`` if compute is False
         * None otherwise
     """
-    if isinstance(encoding, dict):
+    if isinstance(encoding_dict, dict):
         encoding = get_encoding(
             ds,
-            **encoding,
+            **encoding_dict,
         )
-    elif encoding is None:
+    elif encoding_dict is None:
         encoding = {}
     return ds.to_netcdf(
         name,
         encoding=encoding,
-        format="NETCDF4",
-        unlimited_dims={"time": True},
+        format=format,
+        unlimited_dims=unlimited_dims,
         compute=compute,
     )
 

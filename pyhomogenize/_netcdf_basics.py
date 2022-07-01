@@ -1,7 +1,7 @@
 import xarray as xr
 
 from ._basics import basics
-from ._read_write import get_var_name, open_xrdataset, save_to_netcdf
+from ._read_write import get_var_name, open_xrdataset, save_xrdataset
 
 
 class netcdf_basics(basics):
@@ -120,5 +120,5 @@ class netcdf_basics(basics):
         if not output:
             print("No output selected.")
         else:
-            save_to_netcdf(self.ds, output, **kwargs)
+            save_xrdataset(self.ds, output, **kwargs)
         return self

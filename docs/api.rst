@@ -16,7 +16,7 @@ Useful functions for reading and writing large netCDF files
 
 .. automethod:: read_write.get_var_name
 
-.. automethod:: read_write.save_to_netcdf
+.. automethod:: read_write.save_xrdataset
 
 
 Pyhomogenize time creating and manipulating classes

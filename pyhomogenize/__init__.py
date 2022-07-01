@@ -6,7 +6,7 @@
 from . import _read_write as read_write
 from ._basics import basics
 from ._netcdf_basics import netcdf_basics
-from ._read_write import get_var_name, open_xrdataset, save_to_netcdf
+from ._read_write import get_var_name, open_xrdataset, save_xrdataset
 from ._time_compare import time_compare
 from ._time_control import time_control
 from .cli import create_parser
@@ -26,5 +26,5 @@ _all__ = [
     "pyhomogenize",
     "open_xrdataset",
     "get_var_name",
-    "save_to_netcdf",
+    "save_xrdataset",
 ]
