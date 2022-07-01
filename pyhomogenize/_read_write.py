@@ -66,6 +66,10 @@ def open_xrdataset(
         compat=compat,
         **kwargs,
     )
+    if isinstance(files, list):
+        files = ",  ".join(map(str, files))
+    for var in get_var_name(ds):
+        ds[var].attrs["associated_files"] = files
     return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
 
 
