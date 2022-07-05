@@ -102,6 +102,8 @@ def get_chunksizes(
         Tuple of block lengths for this dataarray’s data
     """
     chunks = da.chunks
+    if chunks is None:
+        chunks = da.chunk().chunks
     dims = da.dims
     size = 1
     chunk_dict = {}
