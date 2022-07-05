@@ -39,3 +39,8 @@ History
 
 * rename save_to_netcdf to save_xrdataset
 * write input files to ds attributes
+
+0.2.2 (2022-07-05)
+------------------
+
+* create chunks if not already existing
