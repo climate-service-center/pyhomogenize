@@ -33,3 +33,14 @@ History
 * Outsource useful functions for reading and writing large netCDF files.
 * Use those functiosn directly from pyhomogenize.
 * Calling pyhomogenize classes is not needed.
+
+0.2.1 (2022-07-01)
+------------------
+
+* rename save_to_netcdf to save_xrdataset
+* write input files to ds attributes
+
+0.2.2 (2022-07-05)
+------------------
+
+* create chunks if not already existing
