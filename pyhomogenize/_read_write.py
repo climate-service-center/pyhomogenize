@@ -70,6 +70,7 @@ def open_xrdataset(
         files = ",  ".join(map(str, files))
     for var in get_var_name(ds):
         ds[var].attrs["associated_files"] = files
+    ds.attrs["CF_variables"] = get_var_name(ds)
     return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
 
 

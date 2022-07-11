@@ -44,3 +44,8 @@ History
 ------------------
 
 * create chunks if not already existing
+
+0.2.3 (2022-07-11)
+------------------
+
+* write CF variables to dataset while calling open_xrdataset
