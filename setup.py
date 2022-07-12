@@ -57,6 +57,7 @@ setup(
     keywords="pyhomogenize",
     name="pyhomogenize",
     packages=find_packages(include=["pyhomogenize", "pyhomogenize.*"]),
+    package_data={"pyhomogenize": ["data/netcdf/*.nc"]},
     setup_requires=setup_requirements,
     test_suite="tests",
     tests_require=test_requirements,

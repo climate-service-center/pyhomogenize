@@ -49,3 +49,8 @@ History
 ------------------
 
 * write CF variables to dataset while calling open_xrdataset
+
+0.2.4 (2022-07-12)
+------------------
+
+* add data via pip install
