@@ -54,3 +54,9 @@ History
 ------------------
 
 * add data via pip install
+
+0.2.5 (2023-01-04)
+------------------
+
+* precise mid of time range
+* add more dependencies (cftime, netcdf4, h5netcdf)
