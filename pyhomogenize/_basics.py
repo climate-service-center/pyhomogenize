@@ -51,7 +51,8 @@ class basics:
         return frequency
 
     def _flatten_list(self, lst):
-        """Flatten a list containing strings and lists of arbitrarily nested lists
+        """Flatten a list containing strings and lists
+        of arbitrarily nested lists
 
         Parameters
         ----------
@@ -202,7 +203,8 @@ class basics:
             return cfdate + td(days=1) - td(seconds=1)
 
     def date_to_str(self, date, fmt=None):
-        """Converts ``cftime.datetime`` or ``datetime.datetime`` object to string
+        """Converts ``cftime.datetime`` or ``datetime.datetime`` object
+        to string
 
         Parameters
         ----------
@@ -321,7 +323,7 @@ class basics:
             freq=freq[1],
             calendar=calendar,
         )
-        return t1 + (t2 - t1 + td(days=1)) / 2
+        return t1 + (t2 - t1) / 2
 
     def _point_timestep(self, freq, st, end, calendar=None):
         """Build ``CFTimeIndex``
@@ -387,7 +389,8 @@ class basics:
             )
 
     def is_month_start(self, cftime_range):
-        """Check whether each element of ``CFTimeIndex`` is first day of the month
+        """Check whether each element of ``CFTimeIndex``
+        is first day of the month
 
         Parameters
         ----------
@@ -409,7 +412,8 @@ class basics:
         return array
 
     def is_month_end(self, cftime_range):
-        """Check whether each element of ``CFTimeIndex`` is last day of the month
+        """Check whether each element of ``CFTimeIndex``
+        is last day of the month
 
         Parameters
         ----------
