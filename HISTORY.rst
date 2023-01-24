@@ -60,3 +60,8 @@ History
 
 * precise mid of time range
 * add more dependencies (cftime, netcdf4, h5netcdf)
+
+0.2.6 (2023-01-24)
+------------------
+
+* add `decode_times` and `combine` as keyword argumnets to `open_xrdataset`
