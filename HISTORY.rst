@@ -65,3 +65,4 @@ History
 ------------------
 
 * add `decode_times` and `combine` as keyword argumnets to `open_xrdataset`
+* set default value of parallel in `open_xrdataset` to False
