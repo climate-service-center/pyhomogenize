@@ -7,7 +7,7 @@ def open_xrdataset(
     files,
     use_cftime=True,
     decode_times=False,
-    parallel=True,
+    parallel=False,
     data_vars="minimal",
     chunks={"time": 1},
     coords="minimal",
