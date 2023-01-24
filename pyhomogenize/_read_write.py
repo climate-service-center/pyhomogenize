@@ -6,11 +6,13 @@ import xarray as xr
 def open_xrdataset(
     files,
     use_cftime=True,
+    decode_times=False,
     parallel=True,
     data_vars="minimal",
     chunks={"time": 1},
     coords="minimal",
     compat="override",
+    combine="by_coords",
     **kwargs,
 ):
     """Optimized function for opening large cf datasets.
@@ -56,8 +58,8 @@ def open_xrdataset(
     ds = xr.open_mfdataset(
         files,
         parallel=parallel,
-        decode_times=False,
-        combine="by_coords",
+        decode_times=decode_times,
+        combine=combine,
         preprocess=drop_all_coords,
         decode_cf=False,
         chunks=chunks,
