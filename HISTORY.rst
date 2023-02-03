@@ -66,3 +66,8 @@ History
 
 * add `decode_times` and `combine` as keyword argumnets to `open_xrdataset`
 * set default value of parallel in `open_xrdataset` to False
+
+0.2.7 (2023-02-03)
+------------------
+
+* save_xrdataset is now working if Dataset does not include `time`
