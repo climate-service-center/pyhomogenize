@@ -165,7 +165,7 @@ def get_encoding(
             )
             if chunk_tpl == ():
                 continue
-            encoding[var]["chunksizes"] = chunks
+            encoding[var]["chunksizes"] = chunk_tpl
     return encoding
 
 
