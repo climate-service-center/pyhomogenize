@@ -102,14 +102,16 @@ def get_chunksizes(
     Returns
     -------
     tuple
-        Tuple of block lengths for this dataarray’s data
+        Tuple of block lengths for this DataArray’s data
     """
+    chunk_dict = {}
+    if not chunk_var in da.coords:
+        return tuple(chunk_dict.values())
     chunks = da.chunks
     if chunks is None:
         chunks = da.chunk().chunks
     dims = da.dims
     size = 1
-    chunk_dict = {}
     for dim, chunk in dict(zip(dims, chunks)).items():
         if isinstance(chunk, tuple):
             chunk_size = sum(chunk)
@@ -157,10 +159,13 @@ def get_encoding(
         encoding[var]["_FillValue"] = MISSVAL
         encoding[var]["missing_value"] = MISSVAL
         if isinstance(chunk_dict, dict):
-            encoding[var]["chunksizes"] = get_chunksizes(
+            chunk_tpl = get_chunksizes(
                 ds[var],
                 **chunk_dict,
             )
+            if chunk_tpl == ():
+                continue
+            encoding[var]["chunksizes"] = chunks
     return encoding
 
 
