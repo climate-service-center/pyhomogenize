@@ -229,13 +229,18 @@ class basics:
                 time.indexes["time"].astype("str"),
                 format=time.units.split(" ")[-1],
             ).round("s")
+            cf_datetime = [
+                cftime.datetime(
+                    t.year,
+                    t.month,
+                    t.day,
+                    calendar=time.calendar,
+                )
+                for t in time_index
+            ]
+            return xr.CFTimeIndex(cf_datetime)
         except Exception:
-            time_index = time.indexes["time"]
-        return self.date_range(
-            start=time_index[0],
-            end=time_index[-1],
-            frequency="day",
-        )
+            return time.indexes["time"]
 
     def _equalize_time(
         self,
