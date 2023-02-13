@@ -71,3 +71,8 @@ History
 ------------------
 
 * save_xrdataset is now working if Dataset does not include `time`
+
+0.2.8 (2023-02-13)
+------------------
+
+* convert time axis to CFTimeIndex
