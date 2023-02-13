@@ -225,12 +225,17 @@ class basics:
     def _convert_time(self, time):
         """Converts time object to ``datetime.datetime`` object"""
         try:
-            return pd.to_datetime(
+            time_index = pd.to_datetime(
                 time.indexes["time"].astype("str"),
                 format=time.units.split(" ")[-1],
-            )
+            ).round("s")
         except Exception:
-            return time.indexes["time"]
+            time_index = time.indexes["time"]
+        return self.date_range(
+            start=time_index[0],
+            end=time_index[-1],
+            frequency="day",
+        )
 
     def _equalize_time(
         self,
