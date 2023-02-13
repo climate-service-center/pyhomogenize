@@ -13,9 +13,10 @@ class time_control(netcdf_basics):
 
     def __init__(self, *args, **kwargs):
         netcdf_basics.__init__(self, *args, **kwargs)
-        self.time = self.time()
         del self.frequency
         self.frequency = self.frequency()
+        self.time = self.time()
+        self.ds["time"] = self.time
         self.time_fmt = self.time_fmt()
         self.equalize = self.equalize()
         del self.calendar
@@ -41,11 +42,17 @@ class time_control(netcdf_basics):
 
     def calendar(self):
         """Calendar type read from netCDF file"""
-        return self.time.calendar
+        if hasattr(self.ds.time, "calendar"):
+            return self.ds.time.calendar
+        if hasattr(self.time, "calendar"):
+            return self.time.calendar
 
     def _get_frequency(self):
         """Get frequency of xr.Dataset"""
-        frequency = xr.infer_freq(self.ds.time)
+        try:
+            frequency = xr.infer_freq(self.ds.time)
+        except ValueError:
+            frequency = None
         if not frequency:
             try:
                 frequency = consts.frequencies[self.ds.frequency]
@@ -64,7 +71,10 @@ class time_control(netcdf_basics):
         time = self._equalize_time(self.time, ignore=self.equalize)
         date_range = self._equalize_time(
             self.date_range(
-                time[0], time[-1], self.frequency, calendar=self.time.calendar
+                time[0],
+                time[-1],
+                self.frequency,
+                calendar=self.calendar,
             ),
             ignore=self.equalize,
         )
@@ -75,7 +85,10 @@ class time_control(netcdf_basics):
         time = self._equalize_time(self.time, ignore=self.equalize)
         date_range = self._equalize_time(
             self.date_range(
-                time[0], time[-1], self.frequency, calendar=self.time.calendar
+                time[0],
+                time[-1],
+                self.frequency,
+                calendar=self.calendar,
             ),
             ignore=self.equalize,
         )
@@ -234,6 +247,7 @@ class time_control(netcdf_basics):
         )
         start_date = self.date_to_str(start)
         end_date = self.date_to_str(end)
+
         self.ds = self.ds.sel(time=slice(start_date, end_date))
         self.time = self._convert_time(self.ds.time)
         if output:
