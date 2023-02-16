@@ -228,7 +228,9 @@ class basics:
             time_index = pd.to_datetime(
                 time.indexes["time"].astype("str"),
                 format=time.units.split(" ")[-1],
-            ).round("s")
+            )
+            if time.calendar == "proleptic_gregorian":
+                time.attrs["calendar"] = "standard"
             cf_datetime = [
                 cftime.datetime(
                     t.year,
