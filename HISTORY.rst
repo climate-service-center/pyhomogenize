@@ -76,3 +76,8 @@ History
 ------------------
 
 * convert time axis to CFTimeIndex
+
+0.2.9 (2023-02-16)
+------------------
+
+* set proleptic_gregorian to standard calendar
