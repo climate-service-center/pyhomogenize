@@ -16,7 +16,9 @@ class time_control(netcdf_basics):
         del self.frequency
         self.frequency = self.frequency()
         self.time = self.time()
+        self.time_encoding = self.ds.time.encoding
         self.ds["time"] = self.time
+        self.ds.time.encoding = self.time_encoding
         self.time_fmt = self.time_fmt()
         self.equalize = self.equalize()
         del self.calendar
@@ -32,7 +34,7 @@ class time_control(netcdf_basics):
 
     def time_fmt(self):
         """predefined explicit format string derived from `frequency`"""
-        return consts.format[self.ds.frequency]
+        return consts.fmt[self.ds.frequency]
 
     def equalize(self):
         """predefined list of ``datetime.datetime`` instance attributes
@@ -317,3 +319,25 @@ class time_control(netcdf_basics):
             break
 
         return True
+
+    def add_time_bounds(
+        self,
+        frequency=None,
+    ):
+        da_time = self.ds.time.copy()
+        da_time = da_time.reset_coords(drop=True)
+        if frequency is None:
+            frequency = self.frequency
+        start = self.ds.time.values[0]
+        end = self.ds.time.values[-1]
+        tbounds = self.get_time_bounds(
+            start=start,
+            end=end,
+            dims=da_time.dims,
+            coords=da_time.coords,
+            frequency=frequency,
+        )
+        self.ds = self.ds.assign({"time_bnds": tbounds})
+        self.ds["time_bnds"].encoding = self.ds["time"].encoding
+        self.ds["time"].attrs["bounds"] = "time_bnds"
+        return self
