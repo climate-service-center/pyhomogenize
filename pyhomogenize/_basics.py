@@ -2,7 +2,6 @@ import copy
 from datetime import datetime as dt
 from datetime import timedelta as td
 
-import cf_xarray  # noqa
 import cftime
 import pandas as pd
 import xarray as xr
