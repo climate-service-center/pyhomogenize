@@ -2,6 +2,7 @@ import copy
 from datetime import datetime as dt
 from datetime import timedelta as td
 
+import cf_xarray  # noqa
 import cftime
 import pandas as pd
 import xarray as xr
@@ -305,22 +306,6 @@ class basics:
         CFTimeIndex
         """
 
-        def end_of(date, attr):
-            while True:
-                m = getattr(date, attr)
-                nm = getattr((date + td(hours=1)), attr)
-                if nm != m:
-                    return date
-                date += td(hours=1)
-
-        def begin_of(date, attr):
-            while True:
-                m = getattr(date, attr)
-                pm = getattr((date - td(hours=1)), attr)
-                if pm != m:
-                    return date
-                date -= td(hours=1)
-
         if not calendar:
             calendar = self.calendar
         t1 = xr.cftime_range(
@@ -539,11 +524,12 @@ class basics:
         if is_month_start is None:
             is_month_start = consts.is_month[self._get_date_attr(frequency)]
         if is_month_end is None:
-            is_month_start = consts.is_month[self._get_date_attr(frequency)]
+            is_month_end = consts.is_month[self._get_date_attr(frequency)]
         if is_month_start:
             sdate_range = date_range[self.is_month_start(date_range)]
         if is_month_end:
             edate_range = date_range[self.is_month_end(date_range)]
+
         if sdate_range.empty:
             return None, None
         if edate_range.empty:
@@ -570,3 +556,113 @@ class basics:
             )
         else:
             return sdate, edate
+
+    def get_time_bounds(
+        self,
+        start=None,
+        end=None,
+        date_range=None,
+        frequency=None,
+        calendar=None,
+        l_freq=None,
+        u_freq=None,
+        tdelta=None,
+        dims={},
+        coords={},
+    ):
+        """Get time bounds of CFTimeIndex.
+
+        Parameters
+        ----------
+        start: str or datetime.datetime or cftime.cftime, optional
+            Left bound for generating dates
+        end: str or datetime.datetime or cftime.cftime, optional
+            Right bound for generating dates
+        date_range: CFTimeIndex
+            CFTimeIndex containing cftime.datetime objects
+        frequency: str or list, default:'D'
+            CF frequency string or list of CF frequency strings
+            or frequency string or list of frequency strings
+            for use with ``cftime`` calendars
+            https://xarray.pydata.org/en/stable/generated/xarray.cftime_range.html
+        calendar: str, default: 'standard'
+            Calendar type for the datetimes
+
+        """
+        if start is None or end is None:
+            if date_range is None:
+                raise ValueError("Choose one of: start, end or date_range")
+            start = date_range[0]
+            end = date_range[-1]
+            frequency = date_range.freq
+        if frequency is None:
+            frequency = self.frequency
+        frequency = self._interpret_frequency(frequency)
+        if calendar is None:
+            calendar = self.calendar
+        f = self._get_key_to_value(consts.frequencies, frequency)
+        if l_freq is None:
+            l_freq = consts.tbounds[f][0]
+        if u_freq is None:
+            u_freq = consts.tbounds[f][1]
+        if tdelta is None:
+            tdelta = consts.tbounds[f][2]
+        if isinstance(start, str):
+            start = self.str_to_date(start)
+        if isinstance(end, str):
+            end = self.str_to_date(end)
+        ll = self.date_range(
+            start=start,
+            end=end,
+            frequency=l_freq,
+        )
+        ul = self.date_range(
+            start=start,
+            end=end,
+            frequency=u_freq,
+        )
+        while True:
+            if ll[0] > start:
+                shift_l = ll.shift(-1, freq=l_freq)
+                ll = self.date_range(
+                    start=shift_l[0],
+                    end=ll[-1],
+                    frequency=l_freq,
+                )
+                if ll[0] > start:
+                    shift_u = ul.shift(-1, freq=u_freq)
+                    ul = self.date_range(
+                        start=shift_u[0],
+                        end=ul[-1],
+                        frequency=u_freq,
+                    )
+            else:
+                break
+        while True:
+            if ul[-1] < end:
+                shift_u = ul.shift(1, freq=u_freq)
+                ul = self.date_range(
+                    start=ul[0],
+                    end=shift_u[-1],
+                    frequency=u_freq,
+                )
+                if ul[-1] < end:
+                    shift_l = ll.shift(1, freq=l_freq)
+                    ll = self.date_range(
+                        start=ll[0],
+                        end=shift_l[-1],
+                        frequency=l_freq,
+                    )
+            else:
+                break
+        ll = ll - td(hours=tdelta)
+        ul = ul + td(hours=tdelta)
+        lower = xr.DataArray(ll, coords=coords, dims=dims)
+        upper = xr.DataArray(ul, coords=coords, dims=dims)
+        bounds = xr.concat([lower, upper], dim="bnds")
+        # first = (bounds.isel({"time": 0}) - td(days=1)).assign_coords(
+        #    {"time": start}
+        # )
+        # result = xr.concat([first, bounds], dim="time")
+        result = bounds
+        return result.transpose(..., "bnds")
