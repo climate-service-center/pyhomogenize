@@ -81,3 +81,8 @@ History
 ------------------
 
 * set proleptic_gregorian to standard calendar
+
+0.3.0 (2023-02-22)
+------------------
+
+* calcualte time_bnds and add them to dataset
