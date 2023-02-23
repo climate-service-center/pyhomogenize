@@ -13,4 +13,4 @@ def test_check_existance():
 
 def test_get_operator():
     pyh._utilities.get_operator(object="", name="")
-    pyh._utilities.get_operator(name="test")
+    pyh._utilities.get_operator(object="", name="test")
