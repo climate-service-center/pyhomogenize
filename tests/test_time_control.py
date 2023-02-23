@@ -52,3 +52,7 @@ def test_select_limited_time_range():
     time_control.select_limited_time_range(
         output="test.nc", smonth=[3, 6, 9, 12], emonth=[2, 5, 8, 11]
     )
+
+
+def test_add_time_bounds():
+    time_control.add_time_bounds()
