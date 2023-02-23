@@ -9,6 +9,15 @@ import pyhomogenize as pyh
 from . import has_xarray, requires_xarray
 
 
+def test_get_time_bounds():
+    basics = pyh.basics()
+    assert basics.get_time_bounds()
+    assert basics.get_time_bounds(
+        start="2005-03-02",
+        end="2005-12-25",
+    )
+
+
 def test_date_range_to_frequency_limits():
     basics = pyh.basics()
     start = "2005-03-02"
