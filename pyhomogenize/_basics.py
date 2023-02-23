@@ -452,9 +452,9 @@ class basics:
             Left bound for generating dates
         end: str or datetime.datetime or cftime.cftime, optional
             Right bound for generating dates
-        date_range: CFTimeIndex
+        date_range: CFTimeIndex, optional
             CFTimeIndex containing cftime.datetime objects
-        frequency: str ot list, default:'D'
+        frequency: str ot list
             CF frequency string or list of CF frequency strings
             or frequency string or list of frequency strings
             for use with ``cftime`` calendars
@@ -577,15 +577,33 @@ class basics:
             Left bound for generating dates
         end: str or datetime.datetime or cftime.cftime, optional
             Right bound for generating dates
-        date_range: CFTimeIndex
+        date_range: CFTimeIndex, optional
             CFTimeIndex containing cftime.datetime objects
-        frequency: str or list, default:'D'
+        frequency: str or list
             CF frequency string or list of CF frequency strings
             or frequency string or list of frequency strings
             for use with ``cftime`` calendars
             https://xarray.pydata.org/en/stable/generated/xarray.cftime_range.html
         calendar: str, default: 'standard'
             Calendar type for the datetimes
+        l_freq: str, optional
+            CF frequency string for left bounds
+            If None take time frequency-dependent string
+        u_freq: str, optional
+            CF frequency string for right bounds
+            If None take time frequency-dependent string
+        tdelta: int, optional
+            Number of hours to substract from left bounds
+            and add to right bounds
+            If None take time frequency-dependent integer
+        dims: dict
+            Time dimensions.
+        coords: dict
+            Time coordinates.
+
+        Returns
+        -------
+        xr.DataArray
 
         """
         if start is None or end is None:

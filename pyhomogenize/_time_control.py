@@ -136,7 +136,7 @@ class time_control(netcdf_basics):
 
         Returns
         -------
-        self
+        ``pyhomogenize.time_control`` object
 
         Example
         -------
@@ -186,7 +186,7 @@ class time_control(netcdf_basics):
 
         Returns
         -------
-        self
+        ``pyhomogenize.time_control`` object
 
         Example
         -------
@@ -227,7 +227,7 @@ class time_control(netcdf_basics):
 
         Returns
         -------
-        self
+        ``pyhomogenize.time_control`` object
 
         Example
         -------
@@ -324,6 +324,22 @@ class time_control(netcdf_basics):
         self,
         frequency=None,
     ):
+        """
+        Add time bounds to dataset calculated from time axis.
+
+        Parameters
+        ----------
+        frequency: str or list, default:'D'
+            CF frequency string or list of CF frequency strings
+            or frequency string or list of frequency strings
+            for use with ``cftime`` calendars
+            https://xarray.pydata.org/en/stable/generated/xarray.cftime_range.html
+
+        Returns
+        -------
+        ``pyhomogenize.time_control`` object
+
+        """
         da_time = self.ds.time.copy()
         da_time = da_time.reset_coords(drop=True)
         if frequency is None:
