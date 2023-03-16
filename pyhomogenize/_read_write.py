@@ -244,6 +244,8 @@ def get_var_name(ds):
             ncoords = len(ds[var].coords)
             if ncoords > coords:
                 coords = ncoords
+                name = [var]
+            elif coords == ncoords:
                 name += [var]
         return name
 
