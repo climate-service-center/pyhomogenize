@@ -85,4 +85,9 @@ History
 0.3.0 (2023-02-22)
 ------------------
 
-* calcualte time_bnds and add them to dataset
+* calculate time_bnds and add them to dataset
+
+0.3.1 (2023-03-16)
+------------------
+
+* get CF_variables
