@@ -207,13 +207,12 @@ def save_xrdataset(
         * ``dask.delayed.Delayed`` if compute is False
         * None otherwise
     """
-    if isinstance(encoding_dict, dict):
-        encoding = get_encoding(
-            ds,
-            **encoding_dict,
-        )
-    elif encoding_dict is None:
-        encoding = {}
+    if encoding_dict is None:
+        encoding_dict = {}
+    encoding = get_encoding(
+        ds,
+        **encoding_dict,
+    )
     return ds.to_netcdf(
         name,
         encoding=encoding,
@@ -236,6 +235,9 @@ def get_var_name(ds):
         List of CF variables
     """
 
+    def drop_bnds(var_list):
+        return [var for var in var_list if "_bnds" not in var and "_bounds" not in var]
+
     def condition(ds, var):
         return len(ds[var].coords) == len(ds.coords)
 
@@ -249,12 +251,12 @@ def get_var_name(ds):
                 name = [var]
             elif coords == ncoords:
                 name += [var]
-        return name
+        return drop_bnds(name)
 
     try:
         var_list = [var for var in ds.data_vars if condition(ds, var)]
         if var_list:
-            return var_list
+            return drop_bnds(var_list)
         return most_coords(ds)
     except Exception:
         if hasattr(ds, "name"):
