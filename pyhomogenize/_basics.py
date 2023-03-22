@@ -242,7 +242,9 @@ class basics:
             ]
             return xr.CFTimeIndex(cf_datetime)
         except Exception:
-            return time.indexes["time"]
+            if "time" in time.indexes:
+                return time.indexes["time"]
+            return time.values[()]
 
     def _equalize_time(
         self,
@@ -284,7 +286,7 @@ class basics:
                 freq = consts.frequencies[freq]
         return freq
 
-    def _mid_timestep(self, freq, st, end, calendar=None):
+    def _mid_timestep(self, freq, st, end, calendar=None, **kwargs):
         """Build ``CFTimeIndex``
         Set elements between user-given frequencies
 
@@ -312,16 +314,18 @@ class basics:
             end,
             freq=freq[0],
             calendar=calendar,
+            **kwargs,
         )
         t2 = xr.cftime_range(
             st,
             periods=len(t1),
             freq=freq[1],
             calendar=calendar,
+            **kwargs,
         )
         return t1 + (t2 - t1) / 2
 
-    def _point_timestep(self, freq, st, end, calendar=None):
+    def _point_timestep(self, freq, st, end, calendar=None, **kwargs):
         """Build ``CFTimeIndex``
         Set elements to user-given frequency
 
@@ -343,9 +347,9 @@ class basics:
         """
         if not calendar:
             calendar = self.calendar
-        return xr.cftime_range(st, end, freq=freq, calendar=calendar)
+        return xr.cftime_range(st, end, freq=freq, calendar=calendar, **kwargs)
 
-    def date_range(self, start, end, frequency="D", calendar=None):
+    def date_range(self, start, end, frequency="D", calendar=None, **kwargs):
         """Build ``CFTimeIndex``
 
         Parameters
@@ -375,6 +379,7 @@ class basics:
                 start,
                 end,
                 calendar=calendar,
+                **kwargs,
             )
         if isinstance(frequency, list):
             return self._mid_timestep(
@@ -382,6 +387,7 @@ class basics:
                 start,
                 end,
                 calendar=calendar,
+                **kwargs,
             )
 
     def is_month_start(self, cftime_range):
@@ -443,6 +449,7 @@ class basics:
         is_month_start=None,
         is_month_end=None,
         get_range=False,
+        **kwargs,
     ):
         """Get bounds of CFTimeIndex which satisfy user-given conditions.
 
@@ -514,7 +521,11 @@ class basics:
             if start is None or end is None:
                 return None, None
             date_range = self.date_range(
-                start, end, frequency=frequency, calendar=calendar
+                start,
+                end,
+                frequency=frequency,
+                calendar=calendar,
+                **kwargs,
             )
         start = date_range[0]
         end = date_range[-1]
@@ -568,6 +579,7 @@ class basics:
         tdelta=None,
         dims={},
         coords={},
+        **kwargs,
     ):
         """Get time bounds of CFTimeIndex.
 
@@ -606,9 +618,9 @@ class basics:
         xr.DataArray
 
         """
-        if start is None or end is None:
+        if start is None:
             if date_range is None:
-                raise ValueError("Choose one of: start, end or date_range")
+                raise ValueError("Choose one of: start or date_range")
             start = date_range[0]
             end = date_range[-1]
             frequency = date_range.freq
@@ -632,12 +644,17 @@ class basics:
             start=start,
             end=end,
             frequency=l_freq,
+            **kwargs,
         )
         ul = self.date_range(
             start=start,
             end=end,
             frequency=u_freq,
+            **kwargs,
         )
+        if end is None:
+            end = start
+
         while True:
             if ll[0] > start:
                 shift_l = ll.shift(-1, freq=l_freq)
@@ -672,11 +689,15 @@ class basics:
                     )
             else:
                 break
-        ll = ll - td(hours=tdelta)
-        ul = ul + td(hours=tdelta)
-        lower = xr.DataArray(ll, coords=coords, dims=dims)
-        upper = xr.DataArray(ul, coords=coords, dims=dims)
-        bounds = xr.concat([lower, upper], dim="bnds")
+
+        ll_ = ll - td(hours=tdelta)
+        if ll.equals(ul):
+            bounds = xr.DataArray(ll_, coords=coords, dims="bnds")
+        else:
+            ul_ = ul + td(hours=tdelta)
+            lower = xr.DataArray(ll_, coords=coords, dims=dims)
+            upper = xr.DataArray(ul_, coords=coords, dims=dims)
+            bounds = xr.concat([lower, upper], dim="bnds")
         # first = (bounds.isel({"time": 0}) - td(days=1)).assign_coords(
         #    {"time": start}
         # )
