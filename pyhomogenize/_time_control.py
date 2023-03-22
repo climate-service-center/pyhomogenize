@@ -323,6 +323,8 @@ class time_control(netcdf_basics):
     def add_time_bounds(
         self,
         frequency=None,
+        add=True,
+        **kwargs,
     ):
         """
         Add time bounds to dataset calculated from time axis.
@@ -334,6 +336,9 @@ class time_control(netcdf_basics):
             or frequency string or list of frequency strings
             for use with ``cftime`` calendars
             https://xarray.pydata.org/en/stable/generated/xarray.cftime_range.html
+        add: bool, default: True
+            If True add time_bounds to `ds`.
+            If False return time bounds.
 
         Returns
         -------
@@ -344,15 +349,23 @@ class time_control(netcdf_basics):
         da_time = da_time.reset_coords(drop=True)
         if frequency is None:
             frequency = self.frequency
-        start = self.ds.time.values[0]
-        end = self.ds.time.values[-1]
+        if self.ds.time.values.size > 1:
+            start = self.ds.time.values[0]
+            end = self.ds.time.values[-1]
+        else:
+            start = self.ds.time.values[()]
+            end = None
+            kwargs["periods"] = 2
         tbounds = self.get_time_bounds(
             start=start,
             end=end,
             dims=da_time.dims,
             coords=da_time.coords,
             frequency=frequency,
+            **kwargs,
         )
+        if add is False:
+            return tbounds
         self.ds = self.ds.assign({"time_bnds": tbounds})
         self.ds["time_bnds"].encoding = self.ds["time"].encoding
         self.ds["time"].attrs["bounds"] = "time_bnds"
