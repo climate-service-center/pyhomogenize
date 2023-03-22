@@ -91,3 +91,10 @@ History
 ------------------
 
 * get CF_variables
+
+0.3.2 (2023-03-22)
+------------------
+
+* read and write data with length of time axis is 1
+* add time bounds with length of time axis is 1
+* drop coordinates from non CF variables
