@@ -22,6 +22,7 @@ class netcdf_basics(basics):
         self.files = self.files(files)
         self.ds = self.ds()
         self.name = self.name()
+        self._encoding_coordinates()
 
     def files(self, files):
         """List of input netCDF file(s) and/or xr.Dataset(s)."""
@@ -34,6 +35,12 @@ class netcdf_basics(basics):
     def name(self):
         """CF variable name of `ds`. See method get_var_name"""
         return get_var_name(self.ds)
+
+    def _encoding_coordinates(self):
+        for data_var in self.ds.data_vars:
+            if data_var not in self.name:
+                self.ds[data_var].encoding["coordinates"] = None
+                self.ds[data_var].encoding["_FillValue"] = None
 
     def _add_to_attrs(self, target, attr_name, value):
         """Adds or updates attribute
