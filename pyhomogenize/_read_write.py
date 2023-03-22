@@ -107,6 +107,8 @@ def get_chunksizes(
     chunk_dict = {}
     if not chunk_var in da.coords:
         return tuple(chunk_dict.values())
+    if da.coords[chunk_var].size == 1:
+        return tuple(chunk_dict.values())
     chunks = da.chunks
     if chunks is None:
         chunks = da.chunk().chunks
