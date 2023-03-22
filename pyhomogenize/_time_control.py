@@ -369,4 +369,5 @@ class time_control(netcdf_basics):
         self.ds = self.ds.assign({"time_bnds": tbounds})
         self.ds["time_bnds"].encoding = self.ds["time"].encoding
         self.ds["time"].attrs["bounds"] = "time_bnds"
+        self._encoding_coordinates()
         return self
