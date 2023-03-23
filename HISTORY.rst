@@ -103,3 +103,8 @@ History
 ------------------
 
 * testing for python version 3.8, 3.9 and 3.10
+
+0.4.0 (2023-03-23)
+------------------
+
+* published on zenodo
