@@ -98,3 +98,8 @@ History
 * read and write data with length of time axis is 1
 * add time bounds with length of time axis is 1
 * drop coordinates from non CF variables
+
+0.3.3 (2023-03-23)
+------------------
+
+* testing for python version 3.8, 3.9 and 3.10
