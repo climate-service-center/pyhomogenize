@@ -353,7 +353,10 @@ class time_control(netcdf_basics):
             start = self.ds.time.values[0]
             end = self.ds.time.values[-1]
         else:
-            start = self.ds.time.values[()]
+            try:
+                start = self.ds.time.values[0]
+            except Exception:
+                start = self.ds.time.values[()]
             end = None
             kwargs["periods"] = 2
         tbounds = self.get_time_bounds(
