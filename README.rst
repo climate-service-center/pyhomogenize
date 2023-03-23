@@ -2,29 +2,25 @@
 Homogenize NetCDF files to CF standard: pyhomogenize
 ====================================================
 
-.. image:: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml/badge.svg
-    :target: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml
-
-.. image:: https://codecov.io/gh/ludwiglierhammer/pyhomogenize/branch/main/graph/badge.svg
-    :target: https://codecov.io/gh/ludwiglierhammer/pyhomogenize
-
-.. image:: https://img.shields.io/pypi/v/pyhomogenize.svg
-    :target: https://pypi.python.org/pypi/pyhomogenize
-
-.. image:: https://readthedocs.org/projects/pyhomogenize/badge/?version=latest
-    :target: https://pyhomogenize.readthedocs.io/en/latest/?version=latest
-    :alt: Documentation Status
-
-.. image:: https://results.pre-commit.ci/badge/github/ludwiglierhammer/pyhomogenize/main.svg
-   :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/main
-   :alt: pre-commit.ci status
++----------------------------+-----------------------------------------------------+
+| Versions                   | |pypi|                                              |
++----------------------------+-----------------------------------------------------+
+| Documentation and Support  | |docs| |versions|                                   |
++----------------------------+-----------------------------------------------------+
+| Open Source                | |license|                                           |
++----------------------------+-----------------------------------------------------+
+| Coding Standards           | |black| |pre-commit|                                |
++----------------------------+-----------------------------------------------------+
+| Development Status         | |status| |build| |coveralls|                        |
++----------------------------+-----------------------------------------------------+
 
 Tool to homogenize netCDF to CF standard files using xarray
 
 See https://cfconventions.org
 
-* Free software: MIT license
-* Documentation: https://pyhomogenize.readthedocs.io
+Documentation
+-------------
+The official documentation is at https://pyhomogenize.readthedocs.io/
 
 Features
 --------
@@ -87,3 +83,41 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
 
 .. _Cookiecutter: https://github.com/audreyr/cookiecutter
 .. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+
+.. |pypi| image:: https://img.shields.io/pypi/v/pyhomogenize.svg
+        :target: https://pypi.python.org/pypi/pyhomogenize
+        :alt: Python Package Index Build
+        
+.. |docs| image:: https://readthedocs.org/projects/pyhomogenize/badge/?version=latest
+        :target: https://pyhomogenize.readthedocs.io/en/latest/?version=latest
+        :alt: Documentation Status        
+        
+.. |versions| image:: https://img.shields.io/pypi/pyversions/pyhomogenize.svg
+        :target: https://pypi.python.org/pypi/pyhomogenize
+        :alt: Supported Python Versions      
+        
+.. |license| image:: https://img.shields.io/github/license/ludwiglierhammer/pyhomogenize.svg
+        :target: https://github.com/ludwiglierhammer/pyhomogenize/blob/master/LICENSE
+        :alt: License   
+        
+.. |black| image:: https://img.shields.io/badge/code%20style-black-000000.svg
+        :target: https://github.com/psf/black
+        :alt: Python Black
+        
+.. |pre-commit| image:: https://results.pre-commit.ci/badge/github/ludwiglierhammer/pyhomogenize/main.svg
+   :target: https://results.pre-commit.ci/latest/github/ludwiglierhammer/pyhomogenize/main
+   :alt: pre-commit.ci status     
+   
+.. |status| image:: https://www.repostatus.org/badges/latest/active.svg
+        :target: https://www.repostatus.org/#active
+        :alt: Project Status: Active – The project has reached a stable, usable state and is being actively developed.
+        
+.. |build| image:: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml/badge.svg
+        :target: https://github.com/ludwiglierhammer/pyhomogenize/actions/workflows/ci.yml        
+        :alt: Build Status
+        
+.. |coveralls| image:: https://codecov.io/gh/ludwiglierhammer/pyhomogenize/branch/main/graph/badge.svg
+    :target: https://codecov.io/gh/ludwiglierhammer/pyhomogenize
+    :alt: Coveralls
+
+
