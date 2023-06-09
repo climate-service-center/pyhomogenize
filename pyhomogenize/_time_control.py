@@ -61,6 +61,10 @@ class time_control(netcdf_basics):
             except Exception:
                 print("Could not determine any frequency")
                 return
+        if "frequency" not in self.ds.attrs:
+            self.ds.attrs["frequency"] = self._get_key_to_value(
+                consts.frequencies, frequency
+            )
         return frequency
 
     def _duplicates(self):
@@ -297,10 +301,7 @@ class time_control(netcdf_basics):
             req_end = self.str_to_date(
                 req_end, fmt=fmt, calendar=self.calendar, mode="end"
             )
-        try:
-            key = self.ds.frequency
-        except Exception:
-            key = self._get_key_to_value(consts.frequencies, self.frequency)
+        key = self.ds.frequency
         for unit_of_time in consts.within[key]:
             astart = getattr(avail_start, unit_of_time)
             rstart = getattr(req_start, unit_of_time)
