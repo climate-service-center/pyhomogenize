@@ -225,10 +225,17 @@ class basics:
     def _convert_time(self, time):
         """Converts time object to ``datetime.datetime`` object"""
         try:
-            time_index = pd.to_datetime(
-                time.indexes["time"].astype("str"),
-                format=time.units.split(" ")[-1],
-            )
+            if "units" in time.attrs:
+                time_index = pd.to_datetime(
+                    time.indexes["time"].astype("str"),
+                    format=time.units.split(" ")[-1],
+                )
+            else:
+                time_index = pd.to_datetime(
+                    time.indexes["time"],
+                )
+            if "calendar" not in time.attrs:
+                time.attrs["calendar"] = "standard"
             if time.calendar == "proleptic_gregorian":
                 time.attrs["calendar"] = "standard"
             cf_datetime = [
@@ -654,6 +661,8 @@ class basics:
         )
         if end is None:
             end = start
+            ll = ll[:-1]
+            ul = ul[1:]
 
         while True:
             if ll[0] > start:
@@ -689,6 +698,9 @@ class basics:
                     )
             else:
                 break
+
+        if start == end:
+            ll = ll[:-1]
 
         ll_ = ll - td(hours=tdelta)
         if ll.equals(ul):
