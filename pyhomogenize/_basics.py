@@ -699,7 +699,7 @@ class basics:
             else:
                 break
 
-        if start == end:
+        if start == end and len(ll) > 1:
             ll = ll[:-1]
 
         ll_ = ll - td(hours=tdelta)
