@@ -1,3 +1,5 @@
+"""Merge multiple input files."""
+
 import pyhomogenize as pyh
 
 help = """
@@ -7,6 +9,7 @@ merge : Merge given input files
 
 
 def start(args):
+    """Merge multiple input files."""
     file = pyh.netcdf_basics(args.input_files)
     if not args.output_file:
         print("No output file selecetd. Use -o <ofile>.")

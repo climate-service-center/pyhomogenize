@@ -1,3 +1,4 @@
+"""Print redundant time stamps on screen."""
 import pyhomogenize as pyh
 
 help = """
@@ -7,6 +8,7 @@ showreds : Print redundant timestamps. At first, merge files if needed.
 
 
 def start(args):
+    """Print redundant time stamps on screen."""
     file = pyh.time_control(args.input_files)
     redundants = file.get_redundants()
     print("Redundant time steps: ", redundants)

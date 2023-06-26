@@ -1,5 +1,7 @@
 """Unit test package for pyhomogenize.
-Test if all necessary modules are available"""
+
+Test if all necessary modules are available.
+"""
 
 import importlib
 

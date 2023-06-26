@@ -1,3 +1,4 @@
+"""Print missing time stamps on screen."""
 import pyhomogenize as pyh
 
 help = """
@@ -7,6 +8,7 @@ showmiss : Print missing timestamps. At first, merge files if needed.
 
 
 def start(args):
+    """Print missing time stamps on screen."""
     file = pyh.time_control(args.input_files)
     missings = file.get_missings()
     print("Missing time steps: ", missings)

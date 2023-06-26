@@ -1,3 +1,4 @@
+"""Import all operators for command-line interface."""
 from . import merge  # noqa
 from . import seltimerange  # noqa
 from . import showdups  # noqa

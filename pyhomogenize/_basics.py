@@ -1,6 +1,5 @@
 import copy
-from datetime import datetime as dt
-from datetime import timedelta as td
+from datetime import datetime, timedelta
 
 import cftime
 import pandas as pd
@@ -12,7 +11,7 @@ from . import _consts as consts
 class basics:
     """Class for controlling netCDF CF standard time axis.
 
-    The :class:`basics` contains some basics functions.
+    The `basics` class contains some basics functions.
 
     Parameters
     ----------
@@ -28,31 +27,31 @@ class basics:
         calendar="standard",
         frequency="D",
     ):
+        """Time axis controlling basic functions."""
         self.fmt = fmt
         self.calendar = calendar
         self.frequency = frequency
 
     def fmt(self, fmt):
-        """Time format for converting strings into
-        ``cftime.datetime`` object.
-        """
+        """Time format for converting strings."""
         return fmt
 
     def calendar(self, calendar):
         """Calendar type for the datetimes.
+
         Will be overwritten by netCDF file's inherent calendar.
         """
         return calendar
 
     def frequency(self, frequency):
         """Frequency strings or list of strings can have multiples.
+
         Will be overwritten by netCDF file's inherent frequency.
         """
         return frequency
 
     def _flatten_list(self, lst):
-        """Flatten a list containing strings and lists
-        of arbitrarily nested lists
+        """Flatten a list containing strings and lists.
 
         Parameters
         ----------
@@ -72,8 +71,7 @@ class basics:
         return rt
 
     def _convert_to_string(self, values, delim=",", fmt=None):
-        """Converts list of strings and ``cftime.datetime`` or
-        ``datetime.datetime`` objects to string.
+        """Convert objects to string.
 
         Parameters
         ----------
@@ -103,7 +101,7 @@ class basics:
         return converted[:-1]
 
     def _dictionary(self, attr, keys, value):
-        """Write or update attribute using key-value pairs
+        """Write or update attribute using key-value pairs.
 
         Parameters
         ----------
@@ -121,7 +119,7 @@ class basics:
                 setattr(self, attr, {key: value})
 
     def _get_key_to_value(self, dict, value):
-        """Get key of key-value pair using value
+        """Get key of key-value pair using value.
 
         Parameters
         ----------
@@ -141,7 +139,7 @@ class basics:
         return key_list[position]
 
     def _get_date_attr(self, frequencies):
-        """Get ``cftime.datetime`` instance attribute from CF frequency
+        """Get ``cftime.datetime`` instance attribute from CF frequency.
 
         Parameters
         ----------
@@ -157,7 +155,7 @@ class basics:
         return consts.translator[f]
 
     def str_to_date(self, str, fmt=None, mode="start", calendar=None):
-        """Converts string to ``cftime.datetime`` object
+        """Convert string to ``cftime.datetime`` object.
 
         Parameters
         ----------
@@ -187,7 +185,7 @@ class basics:
             return
         while True:
             try:
-                date = dt.strptime(str, fmt[:i])
+                date = datetime.strptime(str, fmt[:i])
                 break
             except Exception:
                 i += 1
@@ -200,11 +198,10 @@ class basics:
         if mode == "start":
             return cfdate
         if mode == "end":
-            return cfdate + td(days=1) - td(seconds=1)
+            return cfdate + timedelta(days=1) - timedelta(seconds=1)
 
     def date_to_str(self, date, fmt=None):
-        """Converts ``cftime.datetime`` or ``datetime.datetime`` object
-        to string
+        """Convert date object to string.
 
         Parameters
         ----------
@@ -223,7 +220,7 @@ class basics:
         return date.strftime(fmt)
 
     def _convert_time(self, time):
-        """Converts time object to ``datetime.datetime`` object"""
+        """Convert time object to ``datetime.datetime`` object."""
         try:
             if "units" in time.attrs:
                 time_index = pd.to_datetime(
@@ -258,7 +255,7 @@ class basics:
         time,
         ignore=["second", "microsecond", "nanosecond"],
     ):
-        """Ignore ``datetime.datetime`` instance attributes and set them to 0
+        """Ignore ``datetime.datetime`` instance attributes and set them to 0.
 
         Parameters
         ----------
@@ -294,8 +291,7 @@ class basics:
         return freq
 
     def _mid_timestep(self, freq, st, end, calendar=None, **kwargs):
-        """Build ``CFTimeIndex``
-        Set elements between user-given frequencies
+        """Set elements between user-given frequency.
 
         Parameters
         ----------
@@ -313,7 +309,6 @@ class basics:
         -------
         CFTimeIndex
         """
-
         if not calendar:
             calendar = self.calendar
         t1 = xr.cftime_range(
@@ -333,8 +328,7 @@ class basics:
         return t1 + (t2 - t1) / 2
 
     def _point_timestep(self, freq, st, end, calendar=None, **kwargs):
-        """Build ``CFTimeIndex``
-        Set elements to user-given frequency
+        """Set elements to user-given frequency.
 
         Parameters
         ----------
@@ -357,7 +351,7 @@ class basics:
         return xr.cftime_range(st, end, freq=freq, calendar=calendar, **kwargs)
 
     def date_range(self, start, end, frequency="D", calendar=None, **kwargs):
-        """Build ``CFTimeIndex``
+        """Build ``CFTimeIndex``.
 
         Parameters
         ----------
@@ -372,6 +366,7 @@ class basics:
             Set elements to user-given frequency if type of frequency is str
             Set elements between user-given frequencies if type
         calendar: str, default: 'standard'
+            Calendar type
 
         Returns
         -------
@@ -398,8 +393,7 @@ class basics:
             )
 
     def is_month_start(self, cftime_range):
-        """Check whether each element of ``CFTimeIndex``
-        is first day of the month
+        """Check whether each element is first day of the month.
 
         Parameters
         ----------
@@ -413,7 +407,7 @@ class basics:
         """
         array = []
         for cftr in cftime_range:
-            prev = cftr - td(days=1)
+            prev = cftr - timedelta(days=1)
             if prev.month != cftr.month:
                 array += [True]
                 continue
@@ -421,8 +415,7 @@ class basics:
         return array
 
     def is_month_end(self, cftime_range):
-        """Check whether each element of ``CFTimeIndex``
-        is last day of the month
+        """Check whether each element is last day of the month.
 
         Parameters
         ----------
@@ -434,10 +427,9 @@ class basics:
         list
             list of boolean values
         """
-
         array = []
         for cftr in cftime_range:
-            next = cftr + td(days=1)
+            next = cftr + timedelta(days=1)
             if next.month != cftr.month:
                 array += [True]
                 continue
@@ -702,11 +694,11 @@ class basics:
         if start == end and len(ll) > 1:
             ll = ll[:-1]
 
-        ll_ = ll - td(hours=tdelta)
+        ll_ = ll - timedelta(hours=tdelta)
         if ll.equals(ul):
             bounds = xr.DataArray(ll_, coords=coords, dims="bnds")
         else:
-            ul_ = ul + td(hours=tdelta)
+            ul_ = ul + timedelta(hours=tdelta)
             lower = xr.DataArray(ll_, coords=coords, dims=dims)
             upper = xr.DataArray(ul_, coords=coords, dims=dims)
             bounds = xr.concat([lower, upper], dim="bnds")

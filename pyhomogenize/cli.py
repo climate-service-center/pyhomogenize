@@ -6,10 +6,12 @@ from .pyhomogenize import pyhomogenize
 
 
 def csv_list(string):
+    """Split string."""
     return string.split(",")
 
 
 def create_parser():
+    """Create ArgumentParser."""
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "operator",

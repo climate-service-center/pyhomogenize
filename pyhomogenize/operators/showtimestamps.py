@@ -1,3 +1,4 @@
+"""Print timestamps on screen."""
 import pyhomogenize as pyh
 
 help = """
@@ -7,6 +8,7 @@ showtimestamps : Show available timestamps. At first, merge files if needed.
 
 
 def start(args):
+    """Print timestamps on screen."""
     file = pyh.time_control(args.input_files)
     time = file.time
     print(time)
