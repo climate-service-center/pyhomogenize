@@ -14,7 +14,7 @@ def check_existance(files):
     for file in files:
         if not os.path.isfile(file):
             stop = True
-            commands += "{} is not available\n".format(file)
+            commands += f"{file} is not available\n"
     if stop:
         print(commands)
         return
@@ -23,10 +23,10 @@ def check_existance(files):
 
 def get_operator(object, name, type="attribute"):
     if not name:
-        print("No {} is selected.".format(type))
+        print(f"No {type} is selected.")
         return
     try:
         return getattr(object, name)
     except Exception:
-        print("Choosen {} {} is not available.".format(type, name))
+        print(f"Choosen {type} {name} is not available.")
         return
