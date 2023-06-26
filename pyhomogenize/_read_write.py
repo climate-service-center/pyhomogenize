@@ -275,11 +275,11 @@ def get_var_name(ds):
 
 
 def era5_to_regular_grid(
-    inp: xr.Dataset | xr.DataArray,
-    lat: str = "latitude",
-    lon: str = "longitude",
-    method: str = "linear",
-    fill_value: float = None,
+    inp,
+    lat="latitude",
+    lon="longitude",
+    method="linear",
+    fill_value=None,
 ):
     """Convert ERA5 reduced gaussian grid to regular lat/lon grid.
 
