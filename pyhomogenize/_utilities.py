@@ -2,10 +2,7 @@ import os
 
 
 def check_existance(files):
-    """
-    Check if requested files are available
-    Exit if not.
-    """
+    """Check if requested files are available."""
     stop = False
     commands = ""
     if not files:
@@ -22,6 +19,7 @@ def check_existance(files):
 
 
 def get_operator(object, name, type="attribute"):
+    """Get operator."""
     if not name:
         print(f"No {type} is selected.")
         return
