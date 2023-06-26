@@ -119,3 +119,8 @@ History
 -----------------
 
 * fixing v0.5.1
+
+0.5.2 (not published)
+---------------------
+
+* interpolate ERA5 reduced gaussian grid linearly to regular lat/lon grid
