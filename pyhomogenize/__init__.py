@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # flake8: noqa
 
 """Top-level package for pyhomogenize."""
@@ -6,7 +5,12 @@
 from . import _read_write as read_write
 from ._basics import basics
 from ._netcdf_basics import netcdf_basics
-from ._read_write import get_var_name, open_xrdataset, save_xrdataset
+from ._read_write import (
+    era5_to_regular_grid,
+    get_var_name,
+    open_xrdataset,
+    save_xrdataset,
+)
 from ._time_compare import time_compare
 from ._time_control import time_control
 from .cli import create_parser

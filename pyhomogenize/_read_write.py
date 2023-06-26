@@ -1,6 +1,8 @@
 # flake8: noqa: E501
 
+import numpy as np
 import xarray as xr
+from scipy.interpolate import griddata
 
 
 def open_xrdataset(
@@ -8,6 +10,7 @@ def open_xrdataset(
     use_cftime=True,
     decode_times=False,
     parallel=False,
+    preprocess=None,
     data_vars="minimal",
     chunks={"time": 1},
     coords="minimal",
@@ -31,6 +34,9 @@ def open_xrdataset(
         See [decode_cf]_
     parallel: bool, optional
         See [open_mfdataset]_
+    preprocess: func, optional
+        See [open_mfdataset_]
+        If None preprocc is ds.reset_coords(drop=True)
     data_vars: {"minimal", "different", "all"} or list of str, optional
         See [open_mfdataset]
     chunks: int or dict, optional
@@ -42,7 +48,7 @@ def open_xrdataset(
 
     Returns
     -------
-    xarray.Dataset
+    xr.Dataset
 
     References
     ----------
@@ -55,12 +61,15 @@ def open_xrdataset(
     def drop_all_coords(ds):
         return ds.reset_coords(drop=True)
 
+    if preprocess is None:
+        preprocess = drop_all_coords
+
     ds = xr.open_mfdataset(
         files,
         parallel=parallel,
         decode_times=decode_times,
         combine=combine,
-        preprocess=drop_all_coords,
+        preprocess=preprocess,
         decode_cf=False,
         chunks=chunks,
         data_vars=data_vars,
@@ -150,6 +159,7 @@ def get_encoding(
         Dictionary with parameters for `get_chunksizes`.
         If None do not chunk dimension.
         If empty call `get_chunksizes` with default values.
+
     Returns
     -------
     dict
@@ -223,12 +233,12 @@ def save_xrdataset(
 
 
 def get_var_name(ds):
-    """List of CF variables in xr.Dataset
+    """List of CF variables in xr.Dataset.
 
     Parameters
     ----------
     ds: xr.Dataset
-        xarray Dataset
+
     Returns
     -------
     list
@@ -262,3 +272,102 @@ def get_var_name(ds):
         if hasattr(ds, "name"):
             return [ds.name]
         raise ValueError("Coul not find any CF variables.")
+
+
+def era5_to_regular_grid(
+    inp: xr.Dataset | xr.DataArray,
+    lat: str = "latitude",
+    lon: str = "longitude",
+    method: str = "linear",
+    fill_value: float = None,
+):
+    """Convert ERA5 reduced gaussian grid to regular lat/lon grid.
+
+    Parameters
+    ----------
+    inp: xr.Dataset, xr.DataArray
+        ERA5 input as xr.Dataset or xr.DataArray.
+    lat: str
+        Name of the latitude dimension in `inp`.
+    lon: str
+        Name of the longitude dimension in `inp`.
+    method: {"linear", "nearest", "cubic"}
+        Method of interpolation
+    fill_value: float, optional
+        Value used to fill in for requested points outside
+        of the convex hull of the input points.
+
+    Returns
+    -------
+    xr.Dataset or xr.DataArray
+        xr.Dataset or xr.DataArray of interpolated values
+
+    Notes
+    -----
+    The idea is taken from https://gis.stackexchange.com/questions/455149/interpolate-irregularly-sampled-data-to-a-regular-grid.
+    For more information about the input parameter see: https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html
+    """
+
+    def interp_to_grid(u, xc, yc, new_lats, new_lons, method, fill_value):
+        new_points = np.stack(np.meshgrid(new_lats, new_lons), axis=2).reshape(
+            (new_lats.size * new_lons.size, 2)
+        )
+        z = griddata(
+            (xc, yc),
+            u,
+            (new_points[:, 1], new_points[:, 0]),
+            method=method,
+            fill_value=fill_value,
+        )
+        return z.reshape((new_lats.size, new_lons.size), order="F")
+
+    lats = inp[lat].values
+    lons = inp[lon].values
+    lat_attrs = inp[lat].attrs
+    lon_attrs = inp[lon].attrs
+
+    _new_lats = np.unique(lats)
+    _new_lons = np.unique(lons)
+    _new_lats = np.sort(_new_lats)[::-1]
+    lat_attrs["stored_direction"] = "decreasing"
+    _new_lons = np.arange(
+        _new_lons[0],
+        _new_lons[-1] + _new_lons[1] - _new_lons[0],
+        _new_lons[1] - _new_lons[0],
+    )
+
+    new_lons = xr.DataArray(
+        _new_lons,
+        dims=lon,
+        coords={lon: _new_lons},
+        attrs=lon_attrs,
+    )
+    new_lats = xr.DataArray(
+        _new_lats,
+        dims=lat,
+        coords={lat: _new_lats},
+        attrs=lat_attrs,
+    )
+    if fill_value is None:
+        fill_value = np.nan
+
+    # Vectorize the `interp_to_grid` function.
+    out = xr.apply_ufunc(
+        interp_to_grid,
+        inp,
+        lons,
+        lats,
+        new_lats,
+        new_lons,
+        method,
+        fill_value,
+        vectorize=True,
+        dask="parallelized",
+        input_core_dims=[["values"], ["values"], ["values"], [lat], [lon], [], []],
+        output_core_dims=[[lat, lon]],
+        output_dtypes=[float],
+        keep_attrs=True,
+    )
+    out[lat] = new_lats
+    out[lon] = new_lons
+    return out
