@@ -11,6 +11,7 @@ frequencies = {
     "yr": ["AS", "A"],
     "year": ["AS", "A"],
     "fx": None,
+    "none": False,
 }
 
 freqs = {
@@ -56,6 +57,7 @@ fmt = {
     "yr": "%Y",
     "year": "%Y",
     "fx": None,
+    "none": False,
 }
 
 is_month = {
@@ -145,6 +147,7 @@ equalize = {
         "microsecond",
         "nanosecond",
     ],
+    "none": [],
 }
 
 within = {
