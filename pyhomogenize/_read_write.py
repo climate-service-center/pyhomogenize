@@ -79,9 +79,10 @@ def open_xrdataset(
     )
     if isinstance(files, list):
         files = ",  ".join(map(str, files))
-    for var in get_var_name(ds):
+    data_vars = get_var_name(ds)
+    for var in data_vars:
         ds[var].attrs["associated_files"] = files
-    ds.attrs["CF_variables"] = get_var_name(ds)
+    ds.attrs["CF_variables"] = data_vars
     return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
 
 
@@ -249,17 +250,17 @@ def get_var_name(ds):
         return [var for var in var_list if "_bnds" not in var and "_bounds" not in var]
 
     def condition(ds, var):
-        return len(ds[var].coords) == len(ds.coords)
+        return len(ds[var].dims) == len(ds.dims)
 
-    def most_coords(ds):
-        coords = 0
+    def most_dims(ds):
+        dims = 0
         name = []
         for var in ds.data_vars:
-            ncoords = len(ds[var].coords)
-            if ncoords > coords:
-                coords = ncoords
+            ndims = len(ds[var].dims)
+            if ndims > dims:
+                dims = ndims
                 name = [var]
-            elif coords == ncoords:
+            elif dims == ndims:
                 name += [var]
         return drop_bnds(name)
 
@@ -267,11 +268,11 @@ def get_var_name(ds):
         var_list = [var for var in ds.data_vars if condition(ds, var)]
         if var_list:
             return drop_bnds(var_list)
-        return most_coords(ds)
+        return most_dims(ds)
     except Exception:
         if hasattr(ds, "name"):
             return [ds.name]
-        raise ValueError("Coul not find any CF variables.")
+        raise ValueError("Could not find any CF variables.")
 
 
 def era5_to_regular_grid(
@@ -371,3 +372,39 @@ def era5_to_regular_grid(
     out[lat] = new_lats
     out[lon] = new_lons
     return out
+
+
+def era5_combine_time_step(
+    inp,
+):
+    """Combine coordinates `time` and `step` to new time coordinate.
+
+    Parameters
+    ----------
+    inp: xr.Dataset or xr.DataArray
+        ERA5 input as xr.Dataset or xr.DataArray.
+
+    Returns
+    -------
+    xr.Dataset or xr.DataArray
+        xr.Dataset or xr.DataArray with combined time coordinate.
+    """
+
+    def convert_step(step):
+        from datetime import timedelta
+
+        if "units" in step.attrs:
+            units = step.units
+            return [timedelta(**{units: s}) for s in step.values]
+        return step
+
+    ds = inp.copy()
+    ds["step"] = convert_step(ds["step"])
+    ds = ds.stack(new_time=["time", "step"])
+    time = [t + s for t, s in ds["new_time"].values]
+    ds = ds.reset_index(["time", "step"])
+    ds["new_time"] = time
+    for coord in ["time", "step", "valid_time"]:
+        if coord in ds.coords:
+            del ds[coord]
+    return ds.rename({"new_time": "time"})
