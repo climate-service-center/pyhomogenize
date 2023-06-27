@@ -429,11 +429,16 @@ def era5_combine_time_step(
         return step
 
     ds = inp.copy()
-    ds["step"] = convert_step(ds["step"])
-    ds = ds.stack(new_time=["time", "step"])
-    time = [t + s for t, s in ds["new_time"].values]
-    ds = ds.reset_index(["time", "step"])
-    ds["new_time"] = time
+    if "step" in ds.dims:
+        attrs = ds["time"].attrs
+        ds["step"] = convert_step(ds["step"])
+        ds = ds.stack(new_time=["time", "step"])
+        time = [t + s for t, s in ds["new_time"].values]
+        ds = ds.reset_index(["time", "step"])
+        ds["new_time"] = time
+        ds["new_time"].attrs = attrs
+    else:
+        ds = ds.rename({"time": "new_time"})
     for coord in ["time", "step", "valid_time"]:
         if coord in ds.coords:
             del ds[coord]
