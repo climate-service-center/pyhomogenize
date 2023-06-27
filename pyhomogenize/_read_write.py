@@ -4,6 +4,8 @@ import numpy as np
 import xarray as xr
 from scipy.interpolate import griddata
 
+from ._time_control import time_control
+
 
 def open_xrdataset(
     files,
@@ -407,4 +409,10 @@ def era5_combine_time_step(
     for coord in ["time", "step", "valid_time"]:
         if coord in ds.coords:
             del ds[coord]
-    return ds.rename({"new_time": "time"})
+    ds = ds.rename({"new_time": "time"})
+    tc = time_control(ds)
+    return tc.check_timestamps(
+        correct=True,
+        selection="duplicates",
+        write_timesteps=False,
+    ).ds
