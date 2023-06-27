@@ -4,7 +4,7 @@ import numpy as np
 import xarray as xr
 from scipy.interpolate import griddata
 
-from ._time_control import time_control
+# from ._time_control import time_control
 
 
 def open_xrdataset(
@@ -410,9 +410,4 @@ def era5_combine_time_step(
         if coord in ds.coords:
             del ds[coord]
     ds = ds.rename({"new_time": "time"})
-    tc = time_control(ds)
-    return tc.check_timestamps(
-        correct=True,
-        selection="duplicates",
-        write_timesteps=False,
-    ).ds
+    return ds.drop_duplicates(dim="time")
