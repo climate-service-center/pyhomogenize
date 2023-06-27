@@ -270,6 +270,8 @@ class basics:
             ``CFTimeIndex`` containing ``cftime.datetime`` objects
             with ignored instance attributes
         """
+        if len(ignore) == 0:
+            return time
         n = 0
         while n < len(ignore):
             etime = time.tolist()
