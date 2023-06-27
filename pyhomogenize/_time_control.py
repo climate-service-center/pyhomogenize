@@ -53,7 +53,6 @@ class time_control(netcdf_basics):
 
     def _get_frequency(self):
         """Get frequency of xr.Dataset."""
-        frequency = xr.infer_freq(self.ds.time)
         try:
             frequency = xr.infer_freq(self.ds.time)
         except ValueError:

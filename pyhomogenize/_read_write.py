@@ -277,6 +277,28 @@ def get_var_name(ds):
         raise ValueError("Could not find any CF variables.")
 
 
+def era5_open_xrdataset(
+    files,
+):
+    """Open multiple ERA5 grib files to xr.Dataset.
+
+    Parameters
+    ----------
+    files: str or list
+        See [open_mfdataset]_
+
+    Returns
+    -------
+    xr.Dataset
+    """
+    return open_xrdataset(
+        files,
+        engine="cfgrib",
+        use_cftime=False,
+        combine="nested",
+    )
+
+
 def era5_to_regular_grid(
     inp,
     lat="latitude",
@@ -323,6 +345,12 @@ def era5_to_regular_grid(
             fill_value=fill_value,
         )
         return z.reshape((new_lats.size, new_lons.size), order="F")
+
+    if isinstance(inp, xr.Dataset):
+        data_vars = [d for d in inp.data_vars]
+        for data_var in data_vars:
+            if "values" not in inp[data_var].dims:
+                del inp[data_var]
 
     lats = inp[lat].values
     lons = inp[lon].values

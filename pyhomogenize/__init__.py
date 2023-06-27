@@ -7,6 +7,7 @@ from ._basics import basics
 from ._netcdf_basics import netcdf_basics
 from ._read_write import (
     era5_combine_time_step,
+    era5_open_xrdataset,
     era5_to_regular_grid,
     get_var_name,
     open_xrdataset,

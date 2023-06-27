@@ -1,5 +1,5 @@
 frequencies = {
-    "1hr": "1H",
+    "1hr": "H",
     "3hr": "3H",
     "6hr": "6H",
     "6hrPt": "6H",
@@ -15,7 +15,7 @@ frequencies = {
 }
 
 freqs = {
-    "1hr": "1H",
+    "1hr": "H",
     "3hr": "3H",
     "6hr": "6H",
     "6hrPt": "6H",
