@@ -53,6 +53,7 @@ class time_control(netcdf_basics):
 
     def _get_frequency(self):
         """Get frequency of xr.Dataset."""
+        frequency = xr.infer_freq(self.ds.time)
         try:
             frequency = xr.infer_freq(self.ds.time)
         except ValueError:
@@ -62,11 +63,15 @@ class time_control(netcdf_basics):
                 frequency = consts.frequencies[self.ds.frequency]
             except Exception:
                 print("Could not determine any frequency")
-                return
+                frequency = False
+
         if "frequency" not in self.ds.attrs:
             self.ds.attrs["frequency"] = self._get_key_to_value(
                 consts.frequencies, frequency
             )
+        if self.ds.attrs["frequency"] == "none":
+            if frequency:
+                self.ds.attrs["frequency"] = frequency
         return frequency
 
     def _duplicates(self):
@@ -125,6 +130,7 @@ class time_control(netcdf_basics):
         selection=["duplicates", "redundants", "missings"],
         output=None,
         correct=False,
+        write_timesteps=True,
     ):
         """Check netCDF file's time axis.
 
@@ -139,6 +145,8 @@ class time_control(netcdf_basics):
         correct: bool, default: False
             Delete located time steps from xr.Dataset.
             Automatically set True if output.
+        write_timesteps: bool, default: True
+            If True write located timeteps from `selection` to `ds`.
 
         Returns
         -------
@@ -167,7 +175,8 @@ class time_control(netcdf_basics):
             for a in add:
                 loc = [i for i, e in enumerate(time) if e == a][1:]
                 deletes += loc
-            self._write_timesteps(add, nmng)
+            if write_timesteps is True:
+                self._write_timesteps(add, nmng)
         dlist = list(dict.fromkeys(deletes))
         timesteps = [n for n, t in enumerate(time) if n not in dlist]
         if output:
@@ -177,6 +186,7 @@ class time_control(netcdf_basics):
             self.time = self._convert_time(self.ds.time)
         if output:
             self.write(output=output)
+        self.frequency = self._get_frequency()
         return self
 
     def select_time_range(self, time_range, output=None):
