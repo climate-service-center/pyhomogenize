@@ -4,8 +4,6 @@ import numpy as np
 import xarray as xr
 from scipy.interpolate import griddata
 
-# from ._time_control import time_control
-
 
 def open_xrdataset(
     files,
@@ -83,6 +81,8 @@ def open_xrdataset(
         files = ",  ".join(map(str, files))
     data_vars = get_var_name(ds)
     for var in data_vars:
+        if not isinstance(files, str):
+            files = [f for f in files]
         ds[var].attrs["associated_files"] = files
     ds.attrs["CF_variables"] = data_vars
     return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
@@ -443,4 +443,6 @@ def era5_combine_time_step(
         if coord in ds.coords:
             del ds[coord]
     ds = ds.rename({"new_time": "time"})
-    return ds.drop_duplicates(dim="time")
+    ds = ds.drop_duplicates(dim="time")
+    # return ds.dropna(dim="time")
+    return ds
