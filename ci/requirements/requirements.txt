@@ -4,3 +4,4 @@ iteration_utilities>=0.11.0
 cftime
 netcdf4
 h5netcdf
+scipy

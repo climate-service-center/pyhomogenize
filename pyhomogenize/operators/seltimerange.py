@@ -1,3 +1,4 @@
+"""Select user.given time slice."""
 import pyhomogenize as pyh
 
 help = """
@@ -9,6 +10,7 @@ seltimerange : Select user-given time range. At first, merge files if needed.
 
 
 def start(args):
+    """Select user.given time slice."""
     file = pyh.time_control(args.input_files)
     if not args.output_file:
         print("No output file selecetd. Use -o <ofile>.")

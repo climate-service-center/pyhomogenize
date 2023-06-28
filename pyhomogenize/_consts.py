@@ -1,5 +1,5 @@
 frequencies = {
-    "1hr": "1H",
+    "1hr": "H",
     "3hr": "3H",
     "6hr": "6H",
     "6hrPt": "6H",
@@ -11,10 +11,11 @@ frequencies = {
     "yr": ["AS", "A"],
     "year": ["AS", "A"],
     "fx": None,
+    "none": False,
 }
 
 freqs = {
-    "1hr": "1H",
+    "1hr": "H",
     "3hr": "3H",
     "6hr": "6H",
     "6hrPt": "6H",
@@ -56,6 +57,7 @@ fmt = {
     "yr": "%Y",
     "year": "%Y",
     "fx": None,
+    "none": False,
 }
 
 is_month = {
@@ -145,6 +147,7 @@ equalize = {
         "microsecond",
         "nanosecond",
     ],
+    "none": [],
 }
 
 within = {

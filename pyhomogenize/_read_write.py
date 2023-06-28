@@ -1,6 +1,8 @@
 # flake8: noqa: E501
 
+import numpy as np
 import xarray as xr
+from scipy.interpolate import griddata
 
 
 def open_xrdataset(
@@ -8,6 +10,7 @@ def open_xrdataset(
     use_cftime=True,
     decode_times=False,
     parallel=False,
+    preprocess=None,
     data_vars="minimal",
     chunks={"time": 1},
     coords="minimal",
@@ -31,6 +34,9 @@ def open_xrdataset(
         See [decode_cf]_
     parallel: bool, optional
         See [open_mfdataset]_
+    preprocess: func, optional
+        See [open_mfdataset_]
+        If None preprocc is ds.reset_coords(drop=True)
     data_vars: {"minimal", "different", "all"} or list of str, optional
         See [open_mfdataset]
     chunks: int or dict, optional
@@ -42,7 +48,7 @@ def open_xrdataset(
 
     Returns
     -------
-    xarray.Dataset
+    xr.Dataset
 
     References
     ----------
@@ -55,12 +61,15 @@ def open_xrdataset(
     def drop_all_coords(ds):
         return ds.reset_coords(drop=True)
 
+    if preprocess is None:
+        preprocess = drop_all_coords
+
     ds = xr.open_mfdataset(
         files,
         parallel=parallel,
         decode_times=decode_times,
         combine=combine,
-        preprocess=drop_all_coords,
+        preprocess=preprocess,
         decode_cf=False,
         chunks=chunks,
         data_vars=data_vars,
@@ -70,9 +79,12 @@ def open_xrdataset(
     )
     if isinstance(files, list):
         files = ",  ".join(map(str, files))
-    for var in get_var_name(ds):
+    data_vars = get_var_name(ds)
+    for var in data_vars:
+        if not isinstance(files, str):
+            files = [f for f in files]
         ds[var].attrs["associated_files"] = files
-    ds.attrs["CF_variables"] = get_var_name(ds)
+    ds.attrs["CF_variables"] = data_vars
     return xr.decode_cf(ds, use_cftime=use_cftime, decode_timedelta=False)
 
 
@@ -150,6 +162,7 @@ def get_encoding(
         Dictionary with parameters for `get_chunksizes`.
         If None do not chunk dimension.
         If empty call `get_chunksizes` with default values.
+
     Returns
     -------
     dict
@@ -223,12 +236,12 @@ def save_xrdataset(
 
 
 def get_var_name(ds):
-    """List of CF variables in xr.Dataset
+    """List of CF variables in xr.Dataset.
 
     Parameters
     ----------
     ds: xr.Dataset
-        xarray Dataset
+
     Returns
     -------
     list
@@ -239,17 +252,17 @@ def get_var_name(ds):
         return [var for var in var_list if "_bnds" not in var and "_bounds" not in var]
 
     def condition(ds, var):
-        return len(ds[var].coords) == len(ds.coords)
+        return len(ds[var].dims) == len(ds.dims)
 
-    def most_coords(ds):
-        coords = 0
+    def most_dims(ds):
+        dims = 0
         name = []
         for var in ds.data_vars:
-            ncoords = len(ds[var].coords)
-            if ncoords > coords:
-                coords = ncoords
+            ndims = len(ds[var].dims)
+            if ndims > dims:
+                dims = ndims
                 name = [var]
-            elif coords == ncoords:
+            elif dims == ndims:
                 name += [var]
         return drop_bnds(name)
 
@@ -257,8 +270,179 @@ def get_var_name(ds):
         var_list = [var for var in ds.data_vars if condition(ds, var)]
         if var_list:
             return drop_bnds(var_list)
-        return most_coords(ds)
+        return most_dims(ds)
     except Exception:
         if hasattr(ds, "name"):
             return [ds.name]
-        raise ValueError("Coul not find any CF variables.")
+        raise ValueError("Could not find any CF variables.")
+
+
+def era5_open_xrdataset(
+    files,
+):
+    """Open multiple ERA5 grib files to xr.Dataset.
+
+    Parameters
+    ----------
+    files: str or list
+        See [open_mfdataset]_
+
+    Returns
+    -------
+    xr.Dataset
+    """
+    return open_xrdataset(
+        files,
+        engine="cfgrib",
+        use_cftime=False,
+        combine="nested",
+    )
+
+
+def era5_to_regular_grid(
+    inp,
+    lat="latitude",
+    lon="longitude",
+    method="linear",
+    fill_value=None,
+):
+    """Convert ERA5 reduced gaussian grid to regular lat/lon grid.
+
+    Parameters
+    ----------
+    inp: xr.Dataset, xr.DataArray
+        ERA5 input as xr.Dataset or xr.DataArray.
+    lat: str
+        Name of the latitude dimension in `inp`.
+    lon: str
+        Name of the longitude dimension in `inp`.
+    method: {"linear", "nearest", "cubic"}
+        Method of interpolation
+    fill_value: float, optional
+        Value used to fill in for requested points outside
+        of the convex hull of the input points.
+
+    Returns
+    -------
+    xr.Dataset or xr.DataArray
+        xr.Dataset or xr.DataArray of interpolated values
+
+    Notes
+    -----
+    The idea is taken from https://gis.stackexchange.com/questions/455149/interpolate-irregularly-sampled-data-to-a-regular-grid.
+    For more information about the input parameter see: https://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html
+    """
+
+    def interp_to_grid(u, xc, yc, new_lats, new_lons, method, fill_value):
+        new_points = np.stack(np.meshgrid(new_lats, new_lons), axis=2).reshape(
+            (new_lats.size * new_lons.size, 2)
+        )
+        z = griddata(
+            (xc, yc),
+            u,
+            (new_points[:, 1], new_points[:, 0]),
+            method=method,
+            fill_value=fill_value,
+        )
+        return z.reshape((new_lats.size, new_lons.size), order="F")
+
+    if isinstance(inp, xr.Dataset):
+        data_vars = [d for d in inp.data_vars]
+        for data_var in data_vars:
+            if "values" not in inp[data_var].dims:
+                del inp[data_var]
+
+    lats = inp[lat].values
+    lons = inp[lon].values
+    lat_attrs = inp[lat].attrs
+    lon_attrs = inp[lon].attrs
+
+    _new_lats = np.unique(lats)
+    _new_lons = np.unique(lons)
+    _new_lats = np.sort(_new_lats)[::-1]
+    lat_attrs["stored_direction"] = "decreasing"
+    _new_lons = np.arange(
+        _new_lons[0],
+        _new_lons[-1] + _new_lons[1] - _new_lons[0],
+        _new_lons[1] - _new_lons[0],
+    )
+
+    new_lons = xr.DataArray(
+        _new_lons,
+        dims=lon,
+        coords={lon: _new_lons},
+        attrs=lon_attrs,
+    )
+    new_lats = xr.DataArray(
+        _new_lats,
+        dims=lat,
+        coords={lat: _new_lats},
+        attrs=lat_attrs,
+    )
+    if fill_value is None:
+        fill_value = np.nan
+
+    # Vectorize the `interp_to_grid` function.
+    out = xr.apply_ufunc(
+        interp_to_grid,
+        inp,
+        lons,
+        lats,
+        new_lats,
+        new_lons,
+        method,
+        fill_value,
+        vectorize=True,
+        dask="parallelized",
+        input_core_dims=[["values"], ["values"], ["values"], [lat], [lon], [], []],
+        output_core_dims=[[lat, lon]],
+        output_dtypes=[float],
+        keep_attrs=True,
+    )
+    out[lat] = new_lats
+    out[lon] = new_lons
+    return out
+
+
+def era5_combine_time_step(
+    inp,
+):
+    """Combine coordinates `time` and `step` to new time coordinate.
+
+    Parameters
+    ----------
+    inp: xr.Dataset or xr.DataArray
+        ERA5 input as xr.Dataset or xr.DataArray.
+
+    Returns
+    -------
+    xr.Dataset or xr.DataArray
+        xr.Dataset or xr.DataArray with combined time coordinate.
+    """
+
+    def convert_step(step):
+        from datetime import timedelta
+
+        if "units" in step.attrs:
+            units = step.units
+            return [timedelta(**{units: s}) for s in step.values]
+        return step
+
+    ds = inp.copy()
+    if "step" in ds.dims:
+        attrs = ds["time"].attrs
+        ds["step"] = convert_step(ds["step"])
+        ds = ds.stack(new_time=["time", "step"])
+        time = [t + s for t, s in ds["new_time"].values]
+        ds = ds.reset_index(["time", "step"])
+        ds["new_time"] = time
+        ds["new_time"].attrs = attrs
+    else:
+        ds = ds.rename({"time": "new_time"})
+    for coord in ["time", "step", "valid_time"]:
+        if coord in ds.coords:
+            del ds[coord]
+    ds = ds.rename({"new_time": "time"})
+    ds = ds.drop_duplicates(dim="time")
+    # return ds.dropna(dim="time")
+    return ds

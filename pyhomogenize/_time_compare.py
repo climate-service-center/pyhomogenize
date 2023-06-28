@@ -2,9 +2,9 @@ from ._time_control import time_control
 
 
 class time_compare(time_control):
-    """Class for getting the intersection of two time axis.
+    """Class for getting the intersection of two time axes.
 
-    The :class:`time_compare` contains the class `time_control`.
+    The `time_compare` class contains the `time_control` class.
 
     Parameters
     ----------
@@ -13,6 +13,7 @@ class time_compare(time_control):
     """
 
     def __init__(self, *compare_objects, **kwargs):
+        """Time comparision."""
         self.compare_objects = self.compare_objects(compare_objects)
         self.time_control_objects = self.time_control_objects(**kwargs)
         self.times = self.times()

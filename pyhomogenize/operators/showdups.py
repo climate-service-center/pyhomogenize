@@ -1,3 +1,4 @@
+"""Print duplicated time stamps on screen."""
 import pyhomogenize as pyh
 
 help = """
@@ -7,6 +8,7 @@ showdups : Print duplicated timestamps. At first, merge files if needed.
 
 
 def start(args):
+    """Print duplicated time stamps on screen."""
     file = pyh.time_control(args.input_files)
     duplicates = file.get_duplicates()
     print("Duplicated time steps: ", duplicates)

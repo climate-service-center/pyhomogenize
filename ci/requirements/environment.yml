@@ -10,6 +10,7 @@ dependencies:
     - pooch
     - netCDF4
     - iteration_utilities
+    - scipy
     # for testing
     - pytest
     - pytest-cov

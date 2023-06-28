@@ -22,6 +22,7 @@ dependencies:
   - iteration_utilities
   - cftime
   - dask
+  - scipy
 
   - pip:
     - sphinxcontrib-mockautodoc

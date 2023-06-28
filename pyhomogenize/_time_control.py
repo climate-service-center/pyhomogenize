@@ -1,5 +1,5 @@
-import xarray as xr
 from iteration_utilities import duplicates
+import xarray as xr
 
 from . import _consts as consts
 from ._netcdf_basics import netcdf_basics
@@ -8,10 +8,11 @@ from ._netcdf_basics import netcdf_basics
 class time_control(netcdf_basics):
     """Class for dealing with a netCDF file's time axis.
 
-    The :class:`time_control` contains the :class:`ǹetcdf_basics`.
+    The `time_control` class contains the `ǹetcdf_basics` class.
     """
 
     def __init__(self, *args, **kwargs):
+        """Standarizing netCDF time axis."""
         netcdf_basics.__init__(self, *args, **kwargs)
         del self.frequency
         self.frequency = self.frequency()
@@ -25,32 +26,33 @@ class time_control(netcdf_basics):
         self.calendar = self.calendar()
 
     def time(self):
-        """netCDF file's time axis"""
+        """Time axis of a netCDF file."""
         return self._convert_time(self.ds.time)
 
     def frequency(self):
-        """netCDF file's frequency"""
+        """Time frequency of a netCDF file."""
         return self._get_frequency()
 
     def time_fmt(self):
-        """predefined explicit format string derived from `frequency`"""
+        """Predefined explicit format string derived from `frequency`."""
         return consts.fmt[self.ds.frequency]
 
     def equalize(self):
-        """predefined list of ``datetime.datetime`` instance attributes
-        to be ignored
+        """Predefined list of ``datetime.datetime`` instance attributes.
+
+        Ignore those attributes.
         """
         return consts.equalize[self.ds.frequency]
 
     def calendar(self):
-        """Calendar type read from netCDF file"""
+        """Calendar type read from netCDF file."""
         if hasattr(self.ds.time, "calendar"):
             return self.ds.time.calendar
         if hasattr(self.time, "calendar"):
             return self.time.calendar
 
     def _get_frequency(self):
-        """Get frequency of xr.Dataset"""
+        """Get frequency of xr.Dataset."""
         try:
             frequency = xr.infer_freq(self.ds.time)
         except ValueError:
@@ -60,11 +62,15 @@ class time_control(netcdf_basics):
                 frequency = consts.frequencies[self.ds.frequency]
             except Exception:
                 print("Could not determine any frequency")
-                return
+                frequency = False
+
         if "frequency" not in self.ds.attrs:
             self.ds.attrs["frequency"] = self._get_key_to_value(
                 consts.frequencies, frequency
             )
+        if self.ds.attrs["frequency"] == "none":
+            if frequency:
+                self.ds.attrs["frequency"] = frequency
         return frequency
 
     def _duplicates(self):
@@ -123,6 +129,7 @@ class time_control(netcdf_basics):
         selection=["duplicates", "redundants", "missings"],
         output=None,
         correct=False,
+        write_timesteps=True,
     ):
         """Check netCDF file's time axis.
 
@@ -137,6 +144,8 @@ class time_control(netcdf_basics):
         correct: bool, default: False
             Delete located time steps from xr.Dataset.
             Automatically set True if output.
+        write_timesteps: bool, default: True
+            If True write located timeteps from `selection` to `ds`.
 
         Returns
         -------
@@ -165,7 +174,8 @@ class time_control(netcdf_basics):
             for a in add:
                 loc = [i for i, e in enumerate(time) if e == a][1:]
                 deletes += loc
-            self._write_timesteps(add, nmng)
+            if write_timesteps is True:
+                self._write_timesteps(add, nmng)
         dlist = list(dict.fromkeys(deletes))
         timesteps = [n for n, t in enumerate(time) if n not in dlist]
         if output:
@@ -175,10 +185,11 @@ class time_control(netcdf_basics):
             self.time = self._convert_time(self.ds.time)
         if output:
             self.write(output=output)
+        self.frequency = self._get_frequency()
         return self
 
     def select_time_range(self, time_range, output=None):
-        """Select user-given time slice from xr.Dataset
+        """Select user-given time slice from xr.Dataset.
 
         Parameters
         ----------
@@ -215,6 +226,7 @@ class time_control(netcdf_basics):
 
     def select_limited_time_range(self, output=None, **kwargs):
         """Select time slice from xr.Dataset satisfying user-given conditions.
+
         See pyh.basics.date_range_to_frequency_limits.
 
         Parameters
@@ -262,7 +274,7 @@ class time_control(netcdf_basics):
 
     def within_time_range(self, requested_time_range, fmt=None):
         """
-        Checks whether netCDF files time axis is within user-given borders.
+        Check whether netCDF files time axis is within user-given borders.
 
         Parameters
         ----------

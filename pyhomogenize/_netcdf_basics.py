@@ -7,7 +7,7 @@ from ._read_write import get_var_name, open_xrdataset, save_xrdataset
 class netcdf_basics(basics):
     """Class for reading an writing netCDF files.
 
-    The :class:`netcdf_basics` contains :class:`basics`.
+    The `netcdf_basics` class contains `basics` class.
 
     Parameters
     ----------
@@ -16,6 +16,7 @@ class netcdf_basics(basics):
     """
 
     def __init__(self, files, **kwargs):
+        """Read and write netCDF files."""
         basics.__init__(self, **kwargs)
         if isinstance(files, str):
             files = [files]
@@ -29,11 +30,11 @@ class netcdf_basics(basics):
         return files
 
     def ds(self):
-        """Input netCDF file(s) openend as xr.Dataset(s). See method open"""
+        """Input netCDF file(s) openend as xr.Dataset(s). See method open."""
         return self.open()
 
     def name(self):
-        """CF variable name of `ds`. See method get_var_name"""
+        """CF variable name of `ds`. See method get_var_name."""
         return get_var_name(self.ds)
 
     def _encoding_coordinates(self):
@@ -43,7 +44,7 @@ class netcdf_basics(basics):
                 self.ds[data_var].encoding["_FillValue"] = None
 
     def _add_to_attrs(self, target, attr_name, value):
-        """Adds or updates attribute
+        """Add or update attribute.
 
         Parameters
         ----------
@@ -59,7 +60,7 @@ class netcdf_basics(basics):
         target.attrs[attr_name] = value
 
     def to_variable_attributes(self, indexes, attr_name):
-        """Adds or updates variable attributes
+        """Add or update variable attributes.
 
         Parameters
         ----------
@@ -76,7 +77,7 @@ class netcdf_basics(basics):
                 self._add_to_attrs(getattr(self.ds, var), attr_name, indexes)
 
     def to_global_attributes(self, indexes, attr_name):
-        """Adds or updates gloabl attributes
+        """Add or update global attributes.
 
         Parameters
         ----------
@@ -91,8 +92,9 @@ class netcdf_basics(basics):
             self._add_to_attrs(self.ds, attr_name, indexes)
 
     def open(self):
-        """Opens file or list of files on disk.
-        Result is automaticaly wrote to object's attributes.
+        """Open file or list of files on disk.
+
+        Result will be automaticaly written to object's attributes.
         """
         if isinstance(self.files, xr.Dataset):
             return self.files.copy()
@@ -109,7 +111,7 @@ class netcdf_basics(basics):
         )
 
     def write(self, output=None, **kwargs):
-        """Writes `self.ds` or user-given xr.Dataset as netCDF file on disk.
+        """Write `self.ds` or user-given xr.Dataset as netCDF file on disk.
 
         Parameters
         ----------
@@ -120,7 +122,6 @@ class netcdf_basics(basics):
         -------
         self
         """
-
         self.to_variable_attributes(
             self._convert_to_string(self.files), "associated_files"
         )
