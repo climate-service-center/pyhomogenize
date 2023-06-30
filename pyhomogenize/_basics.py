@@ -224,6 +224,19 @@ class basics:
 
     def _convert_time(self, time):
         """Converts time object to ``datetime.datetime`` object"""
+
+        def cftimeindex(time_index, calendar):
+            cf_datetime = [
+                cftime.datetime(
+                    t.year,
+                    t.month,
+                    t.day,
+                    calendar=calendar,
+                )
+                for t in time_index
+            ]
+            return xr.CFTimeIndex(cf_datetime)
+
         try:
             if "units" in time.attrs:
                 time_index = pd.to_datetime(
@@ -238,20 +251,13 @@ class basics:
                 time.attrs["calendar"] = "standard"
             if time.calendar == "proleptic_gregorian":
                 time.attrs["calendar"] = "standard"
-            cf_datetime = [
-                cftime.datetime(
-                    t.year,
-                    t.month,
-                    t.day,
-                    calendar=time.calendar,
-                )
-                for t in time_index
-            ]
-            return xr.CFTimeIndex(cf_datetime)
+            return cftimeindex(time_index, calendar=time.calendar)
         except Exception:
             if "time" in time.indexes:
-                return time.indexes["time"]
-            return time.values[()]
+                t = time.indexes["time"]
+            else:
+                t = time.values[()]
+            return cftimeindex(t, calendar="standard")
 
     def _equalize_time(
         self,
@@ -699,7 +705,7 @@ class basics:
             else:
                 break
 
-        if start == end:
+        if start == end and len(ll) > 1:
             ll = ll[:-1]
 
         ll_ = ll - td(hours=tdelta)
