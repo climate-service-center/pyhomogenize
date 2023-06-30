@@ -121,5 +121,5 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
         :alt: Coveralls
 
 .. |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7762682.svg
-        :target: https://doi.org/10.5281/zenodo.7762682
+        :target: https://doi.org/10.5281/zenodo.8038179
         :alt: DOI

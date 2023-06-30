@@ -108,3 +108,14 @@ History
 ------------------
 
 * published on zenodo
+
+0.5.0 (2023-06-13)
+------------------
+
+* add time bounds if length of time axis is 1
+* convert np.datetime64 object to CFTimeIndex
+
+0.5.1 (2023-06-14
+-----------------
+
+* fixing v0.5.1
