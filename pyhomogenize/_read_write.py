@@ -6,6 +6,7 @@ import xarray as xr
 def open_xrdataset(
     files,
     use_cftime=True,
+    decode_cf=False,
     decode_times=False,
     parallel=False,
     data_vars="minimal",
@@ -61,7 +62,7 @@ def open_xrdataset(
         decode_times=decode_times,
         combine=combine,
         preprocess=drop_all_coords,
-        decode_cf=False,
+        decode_cf=decode_cf,
         chunks=chunks,
         data_vars=data_vars,
         coords=coords,
