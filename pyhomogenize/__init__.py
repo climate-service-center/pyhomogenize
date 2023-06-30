@@ -15,7 +15,7 @@ from .pyhomogenize import pyhomogenize
 
 __author__ = """Ludwig Lierhammer"""
 __email__ = "ludwig.lierhammer@hereon.de"
-__version__ = "0.5.1"
+__version__ = "0.5.2"
 
 _all__ = [
     "basics",

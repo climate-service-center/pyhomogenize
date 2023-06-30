@@ -119,3 +119,9 @@ History
 -----------------
 
 * fixing v0.5.1
+
+0.5.2 (2023-06-30)
+------------------
+
+* convert time axis to cftime.datetime object
+* `open_xrdataset`: set decode_cf to parameters
