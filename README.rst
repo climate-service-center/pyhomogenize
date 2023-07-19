@@ -120,6 +120,6 @@ This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypack
         :target: https://codecov.io/gh/ludwiglierhammer/pyhomogenize
         :alt: Coveralls
 
-.. |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.8099097.svg
-        :target: https://doi.org/10.5281/zenodo.8099097
+.. |zenodo| image:: https://zenodo.org/badge/DOI/10.5281/zenodo.7762681.svg
+        :target: https://doi.org/10.5281/zenodo.7762681
         :alt: DOI
