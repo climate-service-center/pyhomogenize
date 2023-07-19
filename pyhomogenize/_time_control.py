@@ -15,14 +15,14 @@ class time_control(netcdf_basics):
         netcdf_basics.__init__(self, *args, **kwargs)
         del self.frequency
         self.frequency = self.frequency()
+        del self.calendar
+        self.calendar = self.calendar()
         self.time = self.time()
         self.time_encoding = self.ds.time.encoding
         self.ds["time"] = self.time
         self.ds.time.encoding = self.time_encoding
         self.time_fmt = self.time_fmt()
         self.equalize = self.equalize()
-        del self.calendar
-        self.calendar = self.calendar()
 
     def time(self):
         """netCDF file's time axis"""
@@ -48,6 +48,7 @@ class time_control(netcdf_basics):
             return self.ds.time.calendar
         if hasattr(self.time, "calendar"):
             return self.time.calendar
+        return self.ds.time.dt.calendar
 
     def _get_frequency(self):
         """Get frequency of xr.Dataset"""
@@ -248,13 +249,14 @@ class time_control(netcdf_basics):
                                                output='output.nc')
 
         """
-        start, end = self.date_range_to_frequency_limits(
-            self, date_range=self.time, frequency=self.frequency, **kwargs
+        date_range = self.date_range_to_frequency_limits(
+            self,
+            date_range=self.time,
+            frequency=self.frequency,
+            get_range=True,
+            **kwargs,
         )
-        start_date = self.date_to_str(start)
-        end_date = self.date_to_str(end)
-
-        self.ds = self.ds.sel(time=slice(start_date, end_date))
+        self.ds = self.ds.sel(time=date_range)
         self.time = self._convert_time(self.ds.time)
         if output:
             self.write(output=output)
