@@ -222,7 +222,7 @@ class basics:
             fmt = self.fmt
         return date.strftime(fmt)
 
-    def _convert_time(self, time):
+    def _convert_time(self, time, calendar="standard"):
         """Converts time object to ``datetime.datetime`` object"""
 
         def cftimeindex(time_index, calendar):
@@ -237,6 +237,12 @@ class basics:
             ]
             return xr.CFTimeIndex(cf_datetime)
 
+        if hasattr(self, "calendar"):
+            calendar = self.calendar
+        if "calendar" not in time.attrs:
+            calendar = calendar
+        if calendar == "proleptic_gregorian":
+            calendar = "standard"
         try:
             if "units" in time.attrs:
                 time_index = pd.to_datetime(
@@ -247,17 +253,16 @@ class basics:
                 time_index = pd.to_datetime(
                     time.indexes["time"],
                 )
-            if "calendar" not in time.attrs:
-                time.attrs["calendar"] = "standard"
-            if time.calendar == "proleptic_gregorian":
-                time.attrs["calendar"] = "standard"
-            return cftimeindex(time_index, calendar=time.calendar)
+            return cftimeindex(
+                time_index,
+                calendar=calendar,
+            )
         except Exception:
             if "time" in time.indexes:
-                t = time.indexes["time"]
+                return time.indexes["time"]
             else:
                 t = time.values[()]
-            return cftimeindex(t, calendar="standard")
+                return cftimeindex(t, calendar=calendar)
 
     def _equalize_time(
         self,
