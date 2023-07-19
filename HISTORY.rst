@@ -125,3 +125,8 @@ History
 
 * convert time axis to cftime.datetime object
 * `open_xrdataset`: set decode_cf to parameters
+
+0.5.3 (2023-07-19)
+------------------
+
+* some restructuring in _convert_time
