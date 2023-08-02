@@ -130,3 +130,8 @@ History
 ------------------
 
 * some restructuring in _convert_time
+
+0.5.4 (2023-08-02)
+------------------
+
+* use unlimied_dims only if dimension name in ds.coords when saving dataset as netcdf file
