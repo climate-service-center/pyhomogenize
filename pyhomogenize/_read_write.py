@@ -197,7 +197,7 @@ def save_xrdataset(
         File format for the resulting netCDF file
     unlimited_dims: dict
         Dimension(s) that should be serialized as unlimited dimensions.
-        By default, no dimensions are treated as unlimited dimensions.
+        Skip if key not in `ds` coordinates.
     compute: bool, optional
         If true compute immediately, otherwise return a
         `dask.delayed.Delayed` object that can be computed later.
@@ -206,7 +206,7 @@ def save_xrdataset(
     -------
         * ``bytes`` if name is None
         * ``dask.delayed.Delayed`` if compute is False
-        * None otherwise
+        * xr.Dataset otherwise
     """
     if encoding_dict is None:
         encoding_dict = {}
@@ -214,11 +214,12 @@ def save_xrdataset(
         ds,
         **encoding_dict,
     )
+    unlimited_dims_ = {k: v for k, v in unlimited_dims.items() if k in ds.coords}
     return ds.to_netcdf(
         name,
         encoding=encoding,
         format=format,
-        unlimited_dims=unlimited_dims,
+        unlimited_dims=unlimited_dims_,
         compute=compute,
     )
 
