@@ -10,6 +10,7 @@ frequencies = {
     "sem": ["QS-DEC", "Q-FEB"],
     "yr": ["AS", "A"],
     "year": ["AS", "A"],
+    "year2": ["AS-JUL", "AS-JUN"],
     "fx": None,
 }
 
@@ -25,6 +26,7 @@ freqs = {
     "sem": "QS-DEC",
     "yr": "AS",
     "year": "AS",
+    "year2": "AS-JUL",
     "fx": None,
 }
 
@@ -40,6 +42,7 @@ translator = {
     "sem": "month",
     "yr": "year",
     "year": "year",
+    "year2": "year",
     "fx": None,
 }
 
@@ -55,6 +58,7 @@ fmt = {
     "sem": "%Y-%m",
     "yr": "%Y",
     "year": "%Y",
+    "year2": "%Y",
     "fx": None,
 }
 
@@ -65,6 +69,7 @@ is_month = {
     "month": False,
     "sem": False,
     "year": False,
+    "year2": False,
     None: False,
 }
 
@@ -145,6 +150,15 @@ equalize = {
         "microsecond",
         "nanosecond",
     ],
+    "year2": [
+        "month",
+        "day",
+        "hour",
+        "minute",
+        "second",
+        "microsecond",
+        "nanosecond",
+    ],
 }
 
 within = {
@@ -159,6 +173,7 @@ within = {
     "sem": ["year", "month"],
     "yr": ["year"],
     "year": ["year"],
+    "year2": ["year"],
     "fx": None,
 }
 
@@ -180,5 +195,6 @@ tbounds = {
     "sem": ["QS-DEC", "Q-FEB", 12],
     "yr": ["AS", "A", 12],
     "year": ["AS", "A", 12],
+    "year2": ["AS-JUL", "A-JUN", 12],
     "fx": None,
 }
