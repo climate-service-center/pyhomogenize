@@ -96,6 +96,8 @@ class netcdf_basics(basics):
         """
         if isinstance(self.files, xr.Dataset):
             return self.files.copy()
+        elif isinstance(self.files, xr.DataArray):
+            return self.files.to_dataset()
         elif isinstance(self.files, str):
             return open_xrdataset(self.files)
         elif isinstance(self.files, list):
