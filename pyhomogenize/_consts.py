@@ -198,3 +198,15 @@ tbounds = {
     "year2": ["AS-JUL", "A-JUN", 12],
     "fx": None,
 }
+
+cftime_calendars = {
+    "standard": "DatetimeProlepticGregorian",
+    "gregorian": "DatetimeGregorian",
+    "proleptic_gregorian": "DatetimeProlepticGregorian",
+    "noleap": "DatetimeNoLeap",
+    "365_day": "DatetimeNoLeap",
+    "360_day": "Datetime360Day",
+    "julian": "DatetimeJulian",
+    "all_leap": "DatetimeAllLeap",
+    "366_day": "DatetimeAllLeap",
+}
