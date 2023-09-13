@@ -298,6 +298,8 @@ class basics:
                 return etime
             except Exception:
                 n += 1
+        if isinstance(time, list):
+            return time
         return time.tolist()
 
     def _interpret_frequency(self, freq):
