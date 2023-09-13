@@ -237,7 +237,7 @@ class basics:
                 )
                 for t in time_index
             ]
-            return cf_datetime
+            return xr.CFTimeIndex(cf_datetime)
 
         if hasattr(self, "calendar"):
             calendar = self.calendar
@@ -547,6 +547,8 @@ class basics:
                 calendar=calendar,
                 **kwargs,
             )
+        if isinstance(date_range, list):
+            date_range = xr.CFTimeIndex(date_range)
         start = date_range[0]
         end = date_range[-1]
         sdate_range = copy.copy(date_range)
@@ -556,6 +558,7 @@ class basics:
         if is_month_end is None:
             is_month_end = consts.is_month[self._get_date_attr(frequency)]
         if is_month_start:
+            print(date_range, type(date_range))
             sdate_range = date_range[self.is_month_start(date_range)]
         if is_month_end:
             edate_range = date_range[self.is_month_end(date_range)]
