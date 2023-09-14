@@ -560,7 +560,6 @@ class basics:
         if is_month_end is None:
             is_month_end = consts.is_month[self._get_date_attr(frequency)]
         if is_month_start:
-            print(date_range, type(date_range))
             sdate_range = date_range[self.is_month_start(date_range)]
         if is_month_end:
             edate_range = date_range[self.is_month_end(date_range)]
