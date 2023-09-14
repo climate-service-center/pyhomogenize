@@ -11,6 +11,7 @@ frequencies = {
     "yr": ["AS", "A"],
     "year": ["AS", "A"],
     "yearAC": ["AS-JUL", "AS-JUN"],
+    "yearHydro": ["AS-SEP", "AS-AUG"],
     "fx": None,
 }
 
@@ -27,6 +28,7 @@ freqs = {
     "yr": "AS",
     "year": "AS",
     "yearAC": "AS-JUL",
+    "yearHydro": "AS-SEP",
     "fx": None,
 }
 
@@ -43,6 +45,7 @@ translator = {
     "yr": "year",
     "year": "year",
     "yearAC": "year",
+    "yearHydro": "year",
     "fx": None,
 }
 
@@ -59,6 +62,7 @@ fmt = {
     "yr": "%Y",
     "year": "%Y",
     "yearAC": "%Y",
+    "yearHydro": "%Y",
     "fx": None,
 }
 
@@ -70,6 +74,7 @@ is_month = {
     "sem": False,
     "year": False,
     "yearAC": False,
+    "yearHydro": False,
     None: False,
 }
 
@@ -159,6 +164,15 @@ equalize = {
         "microsecond",
         "nanosecond",
     ],
+    "yearHydro": [
+        "month",
+        "day",
+        "hour",
+        "minute",
+        "second",
+        "microsecond",
+        "nanosecond",
+    ],
 }
 
 within = {
@@ -174,6 +188,7 @@ within = {
     "yr": ["year"],
     "year": ["year"],
     "yearAC": ["year"],
+    "yearHydro": ["year"],
     "fx": None,
 }
 
@@ -196,6 +211,7 @@ tbounds = {
     "yr": ["AS", "A", 12],
     "year": ["AS", "A", 12],
     "yearAC": ["AS-JUL", "A-JUN", 12],
+    "yearHydro": ["AS-SEP", "A-AUG", 12],
     "fx": None,
 }
 
