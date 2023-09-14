@@ -136,8 +136,8 @@ History
 
 * use unlimied_dims only if dimension name in ds.coords when saving dataset as netcdf file
 
-0.6.0 (unpublished)
--------------------
+0.6.0 (2023-09-14)
+------------------
 
 * remove `Sphinx` from `requirements_dev.txt`
 * new frequency `time2`: `YY1-07-01` - `YY2-06-30`
