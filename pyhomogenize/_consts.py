@@ -10,6 +10,8 @@ frequencies = {
     "sem": ["QS-DEC", "Q-FEB"],
     "yr": ["AS", "A"],
     "year": ["AS", "A"],
+    "yearAC": ["AS-JUL", "AS-JUN"],
+    "yearHydro": ["AS-SEP", "AS-AUG"],
     "fx": None,
 }
 
@@ -25,6 +27,8 @@ freqs = {
     "sem": "QS-DEC",
     "yr": "AS",
     "year": "AS",
+    "yearAC": "AS-JUL",
+    "yearHydro": "AS-SEP",
     "fx": None,
 }
 
@@ -40,6 +44,8 @@ translator = {
     "sem": "month",
     "yr": "year",
     "year": "year",
+    "yearAC": "year",
+    "yearHydro": "year",
     "fx": None,
 }
 
@@ -55,6 +61,8 @@ fmt = {
     "sem": "%Y-%m",
     "yr": "%Y",
     "year": "%Y",
+    "yearAC": "%Y",
+    "yearHydro": "%Y",
     "fx": None,
 }
 
@@ -65,6 +73,8 @@ is_month = {
     "month": False,
     "sem": False,
     "year": False,
+    "yearAC": False,
+    "yearHydro": False,
     None: False,
 }
 
@@ -145,6 +155,24 @@ equalize = {
         "microsecond",
         "nanosecond",
     ],
+    "yearAC": [
+        "month",
+        "day",
+        "hour",
+        "minute",
+        "second",
+        "microsecond",
+        "nanosecond",
+    ],
+    "yearHydro": [
+        "month",
+        "day",
+        "hour",
+        "minute",
+        "second",
+        "microsecond",
+        "nanosecond",
+    ],
 }
 
 within = {
@@ -159,6 +187,8 @@ within = {
     "sem": ["year", "month"],
     "yr": ["year"],
     "year": ["year"],
+    "yearAC": ["year"],
+    "yearHydro": ["year"],
     "fx": None,
 }
 
@@ -180,5 +210,19 @@ tbounds = {
     "sem": ["QS-DEC", "Q-FEB", 12],
     "yr": ["AS", "A", 12],
     "year": ["AS", "A", 12],
+    "yearAC": ["AS-JUL", "A-JUN", 12],
+    "yearHydro": ["AS-SEP", "A-AUG", 12],
     "fx": None,
+}
+
+cftime_calendars = {
+    "standard": "DatetimeProlepticGregorian",
+    "gregorian": "DatetimeGregorian",
+    "proleptic_gregorian": "DatetimeProlepticGregorian",
+    "noleap": "DatetimeNoLeap",
+    "365_day": "DatetimeNoLeap",
+    "360_day": "Datetime360Day",
+    "julian": "DatetimeJulian",
+    "all_leap": "DatetimeAllLeap",
+    "366_day": "DatetimeAllLeap",
 }

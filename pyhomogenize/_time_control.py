@@ -14,13 +14,13 @@ class time_control(netcdf_basics):
     def __init__(self, *args, **kwargs):
         netcdf_basics.__init__(self, *args, **kwargs)
         del self.frequency
-        self.frequency = self.frequency()
         del self.calendar
         self.calendar = self.calendar()
-        self.time = self.time()
+        self.time = self._equalize_time(self.time())
         self.time_encoding = self.ds.time.encoding
         self.ds["time"] = self.time
         self.ds.time.encoding = self.time_encoding
+        self.frequency = self.frequency()
         self.time_fmt = self.time_fmt()
         self.equalize = self.equalize()
 

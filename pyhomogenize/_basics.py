@@ -222,16 +222,18 @@ class basics:
             fmt = self.fmt
         return date.strftime(fmt)
 
-    def _convert_time(self, time, calendar="standard"):
+    def _convert_time(self, time, calendar="proleptic_gregorian"):
         """Converts time object to ``datetime.datetime`` object"""
 
         def cftimeindex(time_index, calendar):
+            datetime_calendar = consts.cftime_calendars[calendar]
             cf_datetime = [
-                cftime.datetime(
+                getattr(cftime, datetime_calendar)(
                     t.year,
                     t.month,
                     t.day,
-                    calendar=calendar,
+                    t.hour,
+                    t.minute,
                 )
                 for t in time_index
             ]
@@ -239,10 +241,7 @@ class basics:
 
         if hasattr(self, "calendar"):
             calendar = self.calendar
-        if "calendar" not in time.attrs:
-            calendar = calendar
-        if calendar == "proleptic_gregorian":
-            calendar = "standard"
+
         try:
             if "units" in time.attrs:
                 time_index = pd.to_datetime(
@@ -286,8 +285,11 @@ class basics:
         """
         n = 0
         while n < len(ignore):
-            etime = time.tolist()
-            query = {ignr: 1 for ignr in ignore[::-1][n:]}
+            if isinstance(time, list):
+                etime = time
+            else:
+                etime = time.tolist()
+            query = {ignr: 0 for ignr in ignore[::-1][n:]}
             try:
                 i = 0
                 while i < len(etime):
@@ -296,6 +298,8 @@ class basics:
                 return etime
             except Exception:
                 n += 1
+        if isinstance(time, list):
+            return time
         return time.tolist()
 
     def _interpret_frequency(self, freq):
@@ -545,6 +549,8 @@ class basics:
                 calendar=calendar,
                 **kwargs,
             )
+        if isinstance(date_range, list):
+            date_range = xr.CFTimeIndex(date_range)
         start = date_range[0]
         end = date_range[-1]
         sdate_range = copy.copy(date_range)
