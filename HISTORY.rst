@@ -143,3 +143,5 @@ History
 * new frequency `time2`: `YY1-07-01` - `YY2-06-30`
 * convert time_ranges to `CFTimeIndex`
 * make time_control more flexible
+* new frequency: `yearAC` (yyyy1-07-01 to yyyy2-06-30)
+* new_frequency: `yearHydro` (yyyy1-09-01 to yyyy2-08-31)
