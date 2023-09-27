@@ -721,7 +721,9 @@ class basics:
 
         ll_ = ll - td(hours=tdelta)
         if ll.equals(ul):
-            bounds = xr.DataArray(ll_, coords=coords, dims="bnds")
+            bounds = xr.DataArray(ll_, coords=coords, dims=dims)
+            dim_str = "".join(dims)
+            bounds = bounds.rename({dim_str: "bnds"})
         else:
             ul_ = ul + td(hours=tdelta)
             lower = xr.DataArray(ll_, coords=coords, dims=dims)
