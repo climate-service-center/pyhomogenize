@@ -150,3 +150,4 @@ History
 -------------------
 
 * add time bounds for daily data
+* testing python versions 3.9 to 3.11
