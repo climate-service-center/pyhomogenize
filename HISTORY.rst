@@ -145,3 +145,8 @@ History
 * make time_control more flexible
 * new frequency: `yearAC` (yyyy1-07-01 to yyyy2-06-30)
 * new_frequency: `yearHydro` (yyyy1-09-01 to yyyy2-08-31)
+
+0.6.1 (unpublished)
+-------------------
+
+* add time bounds for daily data
