@@ -146,7 +146,7 @@ History
 * new frequency: `yearAC` (yyyy1-07-01 to yyyy2-06-30)
 * new_frequency: `yearHydro` (yyyy1-09-01 to yyyy2-08-31)
 
-0.6.1 (unpublished)
+0.6.1 (2023-10-04)
 -------------------
 
 * add time bounds for daily data
