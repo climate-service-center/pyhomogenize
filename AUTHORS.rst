@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* Ludwig Lierhammer <ludwig.lierhammer@hereon.de>
+* Ludwig Lierhammer <ludwig.lierhammer@dwd.de>
 
 Contributors
 ------------
