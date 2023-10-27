@@ -10,4 +10,4 @@ Development Lead
 Contributors
 ------------
 
-None yet. Why not be the first?
+* Lars Buntemeyer <lars.buntemeyer@hereon.de> `@larsbuntemeyer <https://github.com/larsbuntemeyer>`_
