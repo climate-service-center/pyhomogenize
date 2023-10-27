@@ -70,12 +70,6 @@ Requirements
 
 * xarray
 
-Contact
--------
-In cases of any problems, needs or wishes do not hesitate to contact:
-
-ludwig.lierhammer@hereon.de
-
 Credits
 -------
 
