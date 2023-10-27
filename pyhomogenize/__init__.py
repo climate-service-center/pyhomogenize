@@ -14,7 +14,7 @@ from .data import netcdf as test_netcdf
 from .pyhomogenize import pyhomogenize
 
 __author__ = """Ludwig Lierhammer"""
-__email__ = "ludwig.lierhammer@hereon.de"
+__email__ = "ludwig.lierhammer@dwd.de"
 __version__ = "0.6.1"
 
 _all__ = [
