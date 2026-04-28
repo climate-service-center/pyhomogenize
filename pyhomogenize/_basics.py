@@ -308,6 +308,77 @@ class basics:
                 freq = consts.frequencies[freq]
         return freq
 
+    def _normalize_frequency_alias(self, freq):
+        """Normalize deprecated/legacy pandas offset aliases.
+
+        Pandas deprecated yearly aliases like 'A'/'A-XXX' in favor of
+        'YE'/'YE-XXX' (and similarly 'AS' -> 'YS'). We normalize here so
+        downstream calls (xarray/cftime/pandas offsets) avoid FutureWarnings.
+        """
+
+        def _norm_one(freq_str):
+            if not isinstance(freq_str, str):
+                return freq_str
+            # Monthly
+            if freq_str == "M":
+                return "ME"
+            # Quarterly (quarter end)
+            if freq_str == "Q":
+                return "QE"
+            if freq_str.startswith("Q-"):
+                return "QE-" + freq_str[2:]
+            if freq_str == "A":
+                return "YE"
+            if freq_str.startswith("A-"):
+                return "YE-" + freq_str[2:]
+            if freq_str == "AS":
+                return "YS"
+            if freq_str.startswith("AS-"):
+                return "YS-" + freq_str[3:]
+            return freq_str
+
+        if isinstance(freq, list):
+            return [_norm_one(f) for f in freq]
+        return _norm_one(freq)
+
+    def _xarray_date_range_use_cftime(
+        self,
+        start=None,
+        end=None,
+        periods=None,
+        freq=None,
+        calendar=None,
+        **kwargs,
+    ):
+        """Compatibility wrapper around xarray's CFTime date range creation.
+
+        xarray deprecated ``cftime_range`` in favor of ``date_range`` with
+        ``use_cftime=True``.
+        """
+
+        if not calendar:
+            calendar = self.calendar
+
+        try:
+            return xr.date_range(
+                start=start,
+                end=end,
+                periods=periods,
+                freq=freq,
+                calendar=calendar,
+                use_cftime=True,
+                **kwargs,
+            )
+        except TypeError:
+            return xr.cftime_range(
+                start,
+                end,
+                periods=periods,
+                freq=freq,
+                calendar=calendar,
+                **kwargs,
+            )
+
     def _mid_timestep(self, freq, st, end, calendar=None, **kwargs):
         """Build ``CFTimeIndex``
         Set elements between user-given frequencies
@@ -331,15 +402,15 @@ class basics:
 
         if not calendar:
             calendar = self.calendar
-        t1 = xr.cftime_range(
-            st,
-            end,
+        t1 = self._xarray_date_range_use_cftime(
+            start=st,
+            end=end,
             freq=freq[0],
             calendar=calendar,
             **kwargs,
         )
-        t2 = xr.cftime_range(
-            st,
+        t2 = self._xarray_date_range_use_cftime(
+            start=st,
             periods=len(t1),
             freq=freq[1],
             calendar=calendar,
@@ -369,7 +440,13 @@ class basics:
         """
         if not calendar:
             calendar = self.calendar
-        return xr.cftime_range(st, end, freq=freq, calendar=calendar, **kwargs)
+        return self._xarray_date_range_use_cftime(
+            start=st,
+            end=end,
+            freq=freq,
+            calendar=calendar,
+            **kwargs,
+        )
 
     def date_range(self, start, end, frequency="D", calendar=None, **kwargs):
         """Build ``CFTimeIndex``
@@ -395,6 +472,7 @@ class basics:
         if not calendar:
             calendar = self.calendar
         frequency = self._interpret_frequency(frequency)
+        frequency = self._normalize_frequency_alias(frequency)
         if isinstance(frequency, str):
             return self._point_timestep(
                 frequency,
@@ -658,6 +736,9 @@ class basics:
             l_freq = consts.tbounds[f][0]
         if u_freq is None:
             u_freq = consts.tbounds[f][1]
+
+        l_freq = self._normalize_frequency_alias(l_freq)
+        u_freq = self._normalize_frequency_alias(u_freq)
         if tdelta is None:
             tdelta = consts.tbounds[f][2]
         if isinstance(start, str):

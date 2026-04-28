@@ -7,11 +7,11 @@ frequencies = {
     "week": "7D",
     "mon": ["MS", "M"],
     "monClim": ["MS", "M"],
-    "sem": ["QS-DEC", "Q-FEB"],
-    "yr": ["AS", "A"],
-    "year": ["AS", "A"],
-    "yearAC": ["AS-JUL", "AS-JUN"],
-    "yearHydro": ["AS-SEP", "AS-AUG"],
+    "sem": ["QS-DEC", "QE-FEB"],
+    "yr": ["YS", "YE"],
+    "year": ["YS", "YE"],
+    "yearAC": ["YS-JUL", "YE-JUN"],
+    "yearHydro": ["YS-SEP", "YE-AUG"],
     "fx": None,
 }
 
@@ -25,10 +25,10 @@ freqs = {
     "mon": "MS",
     "monClim": "MS",
     "sem": "QS-DEC",
-    "yr": "AS",
-    "year": "AS",
-    "yearAC": "AS-JUL",
-    "yearHydro": "AS-SEP",
+    "yr": "YS",
+    "year": "YS",
+    "yearAC": "YS-JUL",
+    "yearHydro": "YS-SEP",
     "fx": None,
 }
 
@@ -207,11 +207,11 @@ tbounds = {
     "week": ["7D", "7D", 42],
     "mon": ["MS", "M", 12],
     "monClim": ["MS", "M", 12],
-    "sem": ["QS-DEC", "Q-FEB", 12],
-    "yr": ["AS", "A", 12],
-    "year": ["AS", "A", 12],
-    "yearAC": ["AS-JUL", "A-JUN", 12],
-    "yearHydro": ["AS-SEP", "A-AUG", 12],
+    "sem": ["QS-DEC", "QE-FEB", 12],
+    "yr": ["YS", "YE", 12],
+    "year": ["YS", "YE", 12],
+    "yearAC": ["YS-JUL", "YE-JUN", 12],
+    "yearHydro": ["YS-SEP", "YE-AUG", 12],
     "fx": None,
 }
 
