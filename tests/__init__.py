@@ -19,6 +19,3 @@ def _importskip(modname):
 has_dask, requires_dask = _importskip("dask")
 has_xarray, requires_xarray = _importskip("xarray")
 has_numpy, requires_numpy = _importskip("numpy")
-has_iteration_utilities, requires_iteration_utilities = _importskip(
-    "iteration_utilities"
-)

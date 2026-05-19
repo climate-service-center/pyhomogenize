@@ -66,8 +66,6 @@ Requirements
 
 * dask
 
-* iteration_utilities
-
 * xarray
 
 Credits

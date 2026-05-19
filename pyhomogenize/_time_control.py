@@ -1,5 +1,6 @@
+from collections import Counter
+
 import xarray as xr
-from iteration_utilities import duplicates
 
 from . import _consts as consts
 from ._netcdf_basics import netcdf_basics
@@ -71,7 +72,8 @@ class time_control(netcdf_basics):
     def _duplicates(self):
         """Get duplicated time steps."""
         time = self._equalize_time(self.time, ignore=self.equalize)
-        return sorted(list(duplicates(time)))
+        counts = Counter(time)
+        return sorted([t for t, n in counts.items() if n > 1])
 
     def _missings(self):
         """Get missing time steps."""
