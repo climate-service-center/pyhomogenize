@@ -1,0 +1,59 @@
+[build-system]
+requires = ["setuptools>=64", "setuptools_scm>=8"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyhomogenize"
+dynamic = ["version"]
+description = "Tool to homogenize netCDF files to CF standard"
+authors = [
+    {name = "Ludwig Lierhammer", email = "ludwig.lierhammer@hereon.de"},
+]
+license = {text = "MIT license"}
+readme = "README.rst"
+requires-python = ">=3.9"
+keywords = ["pyhomogenize"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+]
+dependencies = [
+    "dask>=2021.9.1",
+    "xarray>=0.19.0",
+    "cftime",
+    "netcdf4",
+    "h5netcdf",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pip>=19.2.3",
+    "bump2version>=0.5.11",
+    "wheel>=0.33.6",
+    "watchdog>=0.9.0",
+    "flake8>=3.7.8",
+    "tox>=3.14.0",
+    "coverage>=4.5.4",
+    "twine>=1.14.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/climate-service-center/pyhomogenize"
+
+[project.scripts]
+pyhomogenize = "pyhomogenize.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["pyhomogenize", "pyhomogenize.*"]
+
+[tool.setuptools.package-data]
+pyhomogenize = ["data/netcdf/*.nc"]
+
+[tool.setuptools_scm]
