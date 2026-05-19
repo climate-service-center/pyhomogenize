@@ -6,11 +6,9 @@ import pytest
 import pyhomogenize as pyh
 
 from . import has_dask  # noqa
-from . import has_iteration_utilities  # noqa
 from . import has_numpy  # noqa
 from . import has_xarray  # noqa
 from . import requires_dask  # noqa
-from . import requires_iteration_utilities  # noqa
 from . import requires_numpy  # noqa
 from . import requires_xarray  # noqa
 

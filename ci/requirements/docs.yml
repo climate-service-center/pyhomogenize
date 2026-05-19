@@ -19,7 +19,6 @@ dependencies:
   - nbsphinx-link
   - ipython
   - nc-time-axis
-  - iteration_utilities
   - cftime
   - dask
 
