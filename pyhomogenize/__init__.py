@@ -15,7 +15,13 @@ from .pyhomogenize import pyhomogenize
 
 __author__ = """Ludwig Lierhammer"""
 __email__ = "ludwig.lierhammer@dwd.de"
-__version__ = "0.6.1"
+
+try:
+    from importlib.metadata import version as _version, PackageNotFoundError
+
+    __version__ = _version("pyhomogenize")
+except PackageNotFoundError:
+    __version__ = "unknown"
 
 _all__ = [
     "basics",
